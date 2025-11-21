@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pereponka Beats – FL Studio Projects Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* ---------------------------------------------------------
+       BASE DESIGN SYSTEM
+    --------------------------------------------------------- */
+    :root {
+      --bg: #06070d;
+      --bg-alt: #0d0f16;
+      --card: #131620;
+      --accent: #ffcc4d;
+      --accent-soft: rgba(255,204,77,0.14);
+      --text: #f5f5f7;
+      --muted: #9ca3af;
+      --border: #1f2530;
+
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+
+      --shadow-lg: 0 24px 60px rgba(0,0,0,0.55);
+      --shadow-card: 0 14px 44px rgba(0,0,0,0.40);
+
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at top, #111827 0%, #030415 60%, #000 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 16px 80px;
+    }
+
+    /* ---------------------------------------------------------
+       HEADER
+    --------------------------------------------------------- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ---------------------------------------------------------
+       HERO SECTION
+    --------------------------------------------------------- */
+    .hero {
+      background: linear-gradient(135deg, #171b25 0%, #0a0c12 100%);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      padding: 34px 28px 30px;
+      box-shadow: var(--shadow-lg);
+
+      display: grid;
+      grid-template-columns: 3fr 3.4fr;
+      gap: 32px;
+    }
+
+    /* На мобильных: YouTube-окно сверху */
+    @media (max-width: 820px) {
+      .hero {
+        display: flex;
+        flex-direction: column;
+        padding: 28px 22px 26px;
+        gap: 18px;
+      }
+      .hero-media { order: -1; }
+    }
+
+    .hero-title {
+      font-size: 28px;
+      line-height: 1.22;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero-project {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .hero-list {
+      list-style: none;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .hero-list li {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+      align-items: center;
+    }
+
+    .hero-list li::before {
+      content: "✓";
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+
+      background: linear-gradient(135deg, #ffd84a, #ff9e2f);
+      color: #0d0d10;
+
+      box-shadow: 0 14px 36px rgba(255,200,40,0.45);
+      transition: transform .12s ease, box-shadow .15s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(255,200,40,0.65);
+    }
+
+    /* HERO MEDIA */
+    .hero-media {
+      background: linear-gradient(140deg, #1f2634, #0a0d14 70%);
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .hero-media-meta {
+      font-size: 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ---------------------------------------------------------
+       SECTION HEADERS
+    --------------------------------------------------------- */
+    .section {
+      margin-top: 40px;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* ---------------------------------------------------------
+       CAROUSEL
+    --------------------------------------------------------- */
+    .projects-carousel {
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .projects-viewport {
+      overflow: hidden;
+      width: 100%;
+      touch-action: pan-y; /* вертикальный скролл страницы не ломается */
+    }
+
+    .projects-track {
+      display: flex;
+      gap: 16px;
+      transition: transform .28s ease;
+      will-change: transform;
+    }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #0d111c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .15s ease;
+      z-index: 2;
+    }
+
+    #prevProject { left: -48px; }
+    #nextProject { right: -48px; }
+
+    .carousel-arrow:hover {
+      background: #1a2338;
+      border-color: #7faaff;
+      transform: translateY(-50%) scale(1.07);
+    }
+
+    .carousel-arrow svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      stroke-width: 2;
+      transition: stroke .15s ease;
+    }
+
+    .carousel-arrow:hover svg { stroke: #e9ecf2; }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 14px;
+      width: 220px;
+      flex-shrink: 0;
+      cursor: pointer;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,204,77,0.45);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.55);
+    }
+
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #1e293b;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .see-all-wrapper {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-secondary {
+      padding: 10px 22px;
+      font-size: 14px;
+      color: var(--text);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #0d111c;
+      cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+
+    .btn-secondary:hover {
+      background: #233162;
+      transform: translateY(-2px);
+    }
+
+    /* ---------------------------------------------------------
+       FOOTER
+    --------------------------------------------------------- */
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 12px;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+
+    /* ---------------------------------------------------------
+       MODAL
+    --------------------------------------------------------- */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.is-open { display: flex; }
+
+    .modal-dialog {
+      background: #0d111c;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 720px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.75);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: 0.15s;
+    }
+
+    .modal-close-btn:hover { background: rgba(255,255,255,0.06); }
+
+    .modal-search { padding: 10px 20px 0; }
+
+    .modal-search input {
+      width: 100%;
+      padding: 10px 14px;
+      background: #0f131d;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: 0.15s;
+    }
+
+    .modal-search input::placeholder { color: #6b7280; }
+
+    .modal-search input:focus {
+      border-color: #7faaff;
+      background: #151b2b;
+      box-shadow: 0 0 8px rgba(127,170,255,0.35);
+    }
+
+    /* ФИКСИРОВАННАЯ высота окна списка */
+    .modal-body {
+      padding-bottom: 12px;
+      height: 420px;        /* <-- как было */
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex-shrink: 0;
+    }
+
+    .projects-list-header,
+    .projects-list-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) 80px 80px;
+      padding: 10px 20px;
+      align-items: center;
+    }
+
+    .projects-list-header {
+      font-size: 12px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .projects-list-row {
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: background 0.22s ease;
+    }
+
+    .projects-list-row:hover { background: rgba(30,55,115,0.45); }
+
+    .projects-list-index {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+    }
+
+    .projects-list-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .projects-list-tier { color: var(--muted); font-size: 13px; }
+
+    .projects-list-play-btn {
+      border: 1px solid var(--border);
+      background: #11131a;
+      color: #dce0e8;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-self: end;
+      cursor: pointer;
+      transition: background .2s, border .2s, transform .1s;
+    }
+
+    .projects-list-row:hover .projects-list-play-btn {
+      background: #1a2030;
+      border-color: #7faaff;
+      transform: translateY(-1px);
+    }
+
+    /* ---------------------------------------------------------
+       MOBILE POLISH
+    --------------------------------------------------------- */
+    @media (max-width: 600px) {
+      #prevProject { left: 6px; }
+      #nextProject { right: 6px; }
+      .carousel-arrow {
+        width: 32px;
+        height: 32px;
+        background: rgba(13,17,28,0.9);
+        backdrop-filter: blur(6px);
+      }
+    }
+
+    @media (max-width: 480px) { .card { width: 190px; } }
+    @media (max-width: 380px) { .card { width: 170px; } }
+
+    @media (max-width: 420px) {
+      .hero-title { font-size: 24px; }
+      .hero-project { font-size: 15px; }
+      .hero-sub { font-size: 14px; }
+
+      .projects-list-header,
+      .projects-list-row {
+        grid-template-columns: 32px minmax(0, 1fr) 70px;
+        padding: 8px 12px;
+      }
+      .projects-list-tier { display: none; }
+
+      .btn-primary {
+        font-size: 14px;
+        padding: 10px 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">PEREPONKA BEATS · FL STUDIO PROJECTS</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1 class="hero-title" id="heroTitle">
+        Unlock all my FL Studio projects in one Patreon membership
+      </h1>
+
+      <div class="hero-project" id="heroProject">
+        Project from this YouTube video will be inside your membership.
+      </div>
+
+      <p class="hero-sub" id="heroSubtitle">
+        Get the exact FL Studio remake you came for – plus access to a library of 1000+ projects, stems, and exclusive tutorial content.
+      </p>
+
+      <ul class="hero-list">
+        <li>FLPs and stems from all my YouTube videos</li>
+        <li>Exclusive tutorial videos available only on Patreon</li>
+        <li>Live community and direct interaction</li>
+      </ul>
+
+      <a class="btn-primary"
+         href="https://www.patreon.com/pereponkabeats/membership"
+         target="_blank"
+         rel="noopener">
+        <span class="icon">⚡</span>
+        <span>Choose your membership</span>
+      </a>
+    </div>
+
+    <aside class="hero-media" id="highlightCard">
+      <div class="hero-media-video">
+        <div style="position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;">
+          <iframe
+            id="ytFrame"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+            src=""
+            allow="fullscreen; autoplay"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="hero-media-meta" id="projectNote">
+          Video from your YouTube link will appear here.
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- POPULAR PROJECTS -->
+  <section class="section">
+    <div class="section-title-row">
+      <h2 class="section-title">Popular FLP projects</h2>
+    </div>
+
+    <div class="projects-carousel">
+      <button class="carousel-arrow" id="prevProject" aria-label="Previous project">
+        <svg viewBox="0 0 24 24"><path d="M15 18L9 12l6-6"/></svg>
+      </button>
+
+      <div class="projects-viewport" id="projectsViewport">
+        <div class="projects-track" id="projectsTrack"></div>
+      </div>
+
+      <button class="carousel-arrow" id="nextProject" aria-label="Next project">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="see-all-wrapper">
+      <button type="button" class="btn-secondary" id="seeAllBtn">
+        See all projects
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    This page is an overview only. All purchases and downloads happen securely on Patreon.
+  </footer>
+
+</div> <!-- /page -->
+
+<!-- MODAL HTML -->
+<div class="modal-backdrop" id="projectsModal" aria-hidden="true">
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectsModalTitle">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="projectsModalTitle">All projects in this library</div>
+        <div class="modal-sub">Click play to load any project into the main video above.</div>
+      </div>
+      <button type="button" class="modal-close-btn" id="projectsModalClose" aria-label="Close">×</button>
+    </div>
+
+    <div class="modal-search">
+      <input type="text" id="searchInput" placeholder="Search projects..." />
+    </div>
+
+    <div class="modal-body">
+      <div class="projects-list-header">
+        <div>#</div>
+        <div>Project title</div>
+        <div>Tier</div>
+      </div>
+
+      <div id="projectsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+let ALL_PROJECTS = [];
+let PROJECTS = [];
+
+let loopProjects = [];
+let loopOffset = 0;
+let carouselIndex = 0;
+let cardStep = 260;
+
+const urlParams = new URLSearchParams(window.location.search);
+const highlightedVideoId = urlParams.get("project");
+const fromYouTube = urlParams.get("utm_source") === "youtube";
+
+/* CSV PARSER */
+function parseCSVLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+  if (!lines.length) return [];
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const values = parseCSVLine(line);
+    const entry = {};
+    headers.forEach((h, i) => entry[h.trim()] = values[i] || "");
+    return entry;
+  });
+}
+
+/* LOAD CSV */
+async function loadProjectsFromCSV() {
+  try {
+    const res = await fetch("youtube_videos.csv", { cache: "no-store" });
+    if (!res.ok) return;
+
+    const csv = await res.text();
+    const rows = parseCSV(csv);
+
+    ALL_PROJECTS = rows
+      .filter(r => r.video_id && r.video_id.trim() !== "")
+      .map(r => {
+        const id = r.video_id.trim();
+        const topNum = parseInt((r.top || "").trim(), 10);
+        return {
+          videoId: id,
+          displayTitle: (r.title || "Untitled project").trim(),
+          tier: (r.tier || "Gold").trim(),
+          top: Number.isFinite(topNum) ? topNum : 0,
+          thumb: `https://img.youtube.com/vi/${id}/hqdefault.jpg`
+        };
+      });
+
+    const popular = ALL_PROJECTS
+      .filter(p => p.top > 0)
+      .sort((a, b) => a.top - b.top);
+
+    PROJECTS = popular.length ? popular : ALL_PROJECTS.slice(0, 10);
+
+  } catch (e) {
+    console.error("Failed to load youtube_videos.csv", e);
+  }
+}
+
+/* HERO */
+function renderHeroData(project) {
+  const title = document.getElementById("heroTitle");
+  const projectLine = document.getElementById("heroProject");
+  const subtitle = document.getElementById("heroSubtitle");
+  const note = document.getElementById("projectNote");
+
+  if (!project) {
+    title.textContent = "Unlock all my FL Studio projects in one Patreon membership";
+    projectLine.textContent = "Project from this YouTube video will be inside your membership.";
+    subtitle.textContent = "Get access to 1000+ remakes, stems and exclusive tutorials.";
+    note.textContent = "Choose a project from the carousel or list to preview it.";
+    return;
+  }
+
+  title.textContent = "Get access to 1000+ FLPs";
+  projectLine.textContent = "by joining my Patreon";
+  subtitle.textContent = "This FL Studio project is included inside your Patreon membership.";
+  note.innerHTML = `Included in: <strong>${project.tier}</strong> tier and above`;
+}
+
+function setVideo(project, fallback = null, autoplay = false) {
+  const frame = document.getElementById("ytFrame");
+  const id = project?.videoId || fallback;
+  if (!frame || !id) {
+    if (frame) frame.src = "";
+    return;
+  }
+
+  const params = new URLSearchParams({
+    autoplay: autoplay ? "1" : "0",
+    rel: "0",
+    modestbranding: "1"
+  });
+
+  frame.src = `https://www.youtube.com/embed/${id}?${params.toString()}`;
+}
+
+function highlightVideo(project, autoplay = false) {
+  renderHeroData(project);
+  setVideo(project, null, autoplay);
+
+  if (project) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("project", project.videoId);
+    window.history.replaceState({}, "", url.toString());
+  }
+}
+
+/* CAROUSEL */
+function buildCarousel() {
+  const track = document.getElementById("projectsTrack");
+  if (!track || !PROJECTS.length) return;
+
+  track.innerHTML = "";
+
+  const clonesBefore = PROJECTS.slice(-3);
+  const clonesAfter = PROJECTS.slice(0, 3);
+
+  loopProjects = [...clonesBefore, ...PROJECTS, ...clonesAfter];
+  loopOffset = clonesBefore.length;
+
+  loopProjects.forEach(project => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-thumb">
+        <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="card-title">${project.displayTitle}</div>
+      <div class="card-footer">
+        Included in: <strong>${project.tier}</strong> tier
+      </div>
+    `;
+    card.addEventListener("click", () => highlightVideo(project, true));
+    track.appendChild(card);
+  });
+
+  const first = track.querySelector(".card");
+  if (first) cardStep = first.offsetWidth + 16;
+
+  carouselIndex = loopOffset;
+  updateCarousel(true);
+}
+
+function updateCarousel(jump = false, extraPx = 0) {
+  const track = document.getElementById("projectsTrack");
+  if (!track) return;
+  track.style.transition = jump ? "none" : "transform .28s ease";
+  track.style.transform = `translateX(${-(carouselIndex * cardStep) + extraPx}px)`;
+}
+
+function setupCarouselControls() {
+  const prev = document.getElementById("prevProject");
+  const next = document.getElementById("nextProject");
+  if (!prev || !next || !loopProjects.length) return;
+
+  window._goNext = () => {
+    carouselIndex++;
+    updateCarousel();
+    if (carouselIndex >= loopProjects.length - loopOffset) {
+      setTimeout(() => {
+        carouselIndex = loopOffset;
+        updateCarousel(true);
+      }, 300);
+    }
+  };
+
+  window._goPrev = () => {
+    carouselIndex--;
+    updateCarousel();
+    if (carouselIndex < loopOffset) {
+      setTimeout(() => {
+        carouselIndex = loopProjects.length - loopOffset - 1;
+        updateCarousel(true);
+      }, 300);
+    }
+  };
+
+  next.onclick = window._goNext;
+  prev.onclick = window._goPrev;
+}
+
+/* SWIPE ONLY ON TOUCH DEVICES */
+function setupCarouselSwipeTouchOnly() {
+  const isTouchDevice =
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(hover: none)").matches;
+
+  if (!isTouchDevice) return; // <-- на десктопе свайпов нет
+
+  const viewport = document.getElementById("projectsViewport");
+  const track = document.getElementById("projectsTrack");
+  if (!viewport || !track || !loopProjects.length) return;
+
+  let isDown = false;
+  let startX = 0;
+  let startY = 0;
+  let dx = 0;
+  let didMove = false;
+
+  const THRESHOLD = 60; // px
+
+  function onStart(clientX, clientY) {
+    isDown = true;
+    didMove = false;
+    dx = 0;
+    startX = clientX;
+    startY = clientY;
+    track.style.transition = "none";
+  }
+
+  function onMove(clientX, clientY, e) {
+    if (!isDown) return;
+
+    const curDx = clientX - startX;
+    const curDy = clientY - startY;
+
+    if (Math.abs(curDy) > Math.abs(curDx)) return;
+
+    didMove = true;
+    dx = curDx;
+    e.preventDefault();
+
+    updateCarousel(true, dx);
+  }
+
+  function onEnd() {
+    if (!isDown) return;
+    isDown = false;
+    track.style.transition = "";
+
+    if (!didMove) {
+      updateCarousel();
+      return;
+    }
+
+    if (dx <= -THRESHOLD) {
+      window._goNext && window._goNext();
+    } else if (dx >= THRESHOLD) {
+      window._goPrev && window._goPrev();
+    } else {
+      updateCarousel();
+    }
+  }
+
+  viewport.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    onStart(t.clientX, t.clientY);
+  }, { passive: true });
+
+  viewport.addEventListener("touchmove", (e) => {
+    const t = e.touches[0];
+    onMove(t.clientX, t.clientY, e);
+  }, { passive: false });
+
+  viewport.addEventListener("touchend", onEnd, { passive: true });
+  viewport.addEventListener("touchcancel", onEnd, { passive: true });
+}
+
+/* MODAL */
+function openModal() {
+  const modal = document.getElementById("projectsModal");
+  if (!modal) return;
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeModal() {
+  const modal = document.getElementById("projectsModal");
+  if (!modal) return;
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function fillModal() {
+  const list = document.getElementById("projectsList");
+  const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
+
+  if (!list) return;
+  list.innerHTML = "";
+
+  ALL_PROJECTS
+    .filter(p => p.displayTitle.toLowerCase().includes(searchValue))
+    .forEach((p, i) => {
+      const row = document.createElement("div");
+      row.className = "projects-list-row";
+
+      row.innerHTML = `
+        <div class="projects-list-index">${i + 1}</div>
+        <div class="projects-list-title" title="${p.displayTitle}">${p.displayTitle}</div>
+        <div class="projects-list-tier">${p.tier}</div>
+        <button class="projects-list-play-btn">
+          <span>▶</span> Play
+        </button>
+      `;
+
+      const play = row.querySelector(".projects-list-play-btn");
+
+      function playProject() {
+        highlightVideo(p, true);
+        closeModal();
+      }
+
+      play.addEventListener("click", e => { e.stopPropagation(); playProject(); });
+      row.addEventListener("click", playProject);
+
+      list.appendChild(row);
+    });
+}
+
+function setupModal() {
+  const openBtn = document.getElementById("seeAllBtn");
+  const modal = document.getElementById("projectsModal");
+  const closeBtn = document.getElementById("projectsModalClose");
+  if (!openBtn || !modal || !closeBtn) return;
+
+  openBtn.addEventListener("click", openModal);
+  closeBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", e => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeModal();
+  });
+
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.addEventListener("input", fillModal);
+}
+
+/* INIT */
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadProjectsFromCSV();
+
+  if (ALL_PROJECTS.length) {
+    buildCarousel();
+    setupCarouselControls();
+    setupCarouselSwipeTouchOnly(); // <-- только touch
+    setupModal();
+    fillModal();
+  }
+
+  let match = null;
+  if (highlightedVideoId) {
+    match = ALL_PROJECTS.find(p => p.videoId === highlightedVideoId) || null;
+  }
+
+  if (match) {
+    highlightVideo(match, fromYouTube);
+  } else if (PROJECTS.length) {
+    highlightVideo(PROJECTS[0], false);
+  } else {
+    renderHeroData(null);
+  }
+});
+</script>
+
+</body>
+</html>
