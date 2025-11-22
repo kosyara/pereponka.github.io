@@ -800,20 +800,33 @@ function buildCarousel() {
   loopOffset = clonesBefore.length;
 
   loopProjects.forEach(project => {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="card-thumb">
-        <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div class="card-title">${project.displayTitle}</div>
-      <div class="card-footer">
-        Included in: <strong>${project.tier}</strong> tier
-      </div>
-    `;
-    card.addEventListener("click", () => highlightVideo(project, true));
-    track.appendChild(card);
+  const card = document.createElement("article");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="card-thumb">
+      <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <div class="card-title">${project.displayTitle}</div>
+    <div class="card-footer">
+      Included in: <strong>${project.tier}</strong> tier
+    </div>
+  `;
+
+  card.addEventListener("click", () => {
+    // 📌 отправляем событие в Метрику
+    ym(105459376, "reachGoal", "project_open", {
+      project_id: project.videoId,
+      project_title: project.displayTitle,
+      tier: project.tier
+    });
+
+    // запускаем открытие проекта
+    highlightVideo(project, true);
   });
+
+  track.appendChild(card);
+});
+
 
   const first = track.querySelector(".card");
   if (first) cardStep = first.offsetWidth + 16;
@@ -1038,6 +1051,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 </body>
 </html>
+
 
 
 
