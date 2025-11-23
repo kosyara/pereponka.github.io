@@ -530,7 +530,7 @@
     </div>
   </noscript>
   <!-- /Yandex.Metrika counter -->
-  
+
 </head>
 
 <body>
@@ -758,6 +758,32 @@ function renderHeroData(project) {
   note.innerHTML = `Included in: <strong>${project.tier}</strong> tier and above`;
 }
 
+function updatePageTitle(project) {
+  const base = "Pereponka Beats"; // брендовый хвост
+  if (!project) {
+    const defaultTitle = `${base} – FL Studio Projects Library`;
+    document.title = defaultTitle;
+
+    const og = document.getElementById("ogTitle");
+    const tw = document.getElementById("twTitle");
+    if (og) og.setAttribute("content", defaultTitle);
+    if (tw) tw.setAttribute("content", defaultTitle);
+    return;
+  }
+
+  // твой формат: "XXXTentacion – Moonlight (FL Studio Project)"
+  const newTitle = `${project.displayTitle} (FL Studio Project)`;
+
+  document.title = newTitle;
+
+  const og = document.getElementById("ogTitle");
+  const tw = document.getElementById("twTitle");
+  if (og) og.setAttribute("content", newTitle);
+  if (tw) tw.setAttribute("content", newTitle);
+}
+
+
+
 function setVideo(project, fallback = null, autoplay = false) {
   const frame = document.getElementById("ytFrame");
   const id = project?.videoId || fallback;
@@ -778,6 +804,7 @@ function setVideo(project, fallback = null, autoplay = false) {
 function highlightVideo(project, autoplay = false) {
   renderHeroData(project);
   setVideo(project, null, autoplay);
+  updatePageTitle(project); // <-- добавили
 
   if (project) {
     const url = new URL(window.location.href);
@@ -785,6 +812,7 @@ function highlightVideo(project, autoplay = false) {
     window.history.replaceState({}, "", url.toString());
   }
 }
+
 
 /* CAROUSEL */
 function buildCarousel() {
@@ -1051,7 +1079,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 </body>
 </html>
-
 
 
 
