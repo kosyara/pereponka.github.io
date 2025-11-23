@@ -758,29 +758,7 @@ function renderHeroData(project) {
   note.innerHTML = `Included in: <strong>${project.tier}</strong> tier and above`;
 }
 
-function updatePageTitle(project) {
-  const base = "Pereponka Beats"; // брендовый хвост
-  if (!project) {
-    const defaultTitle = `${base} – FL Studio Projects Library`;
-    document.title = defaultTitle;
 
-    const og = document.getElementById("ogTitle");
-    const tw = document.getElementById("twTitle");
-    if (og) og.setAttribute("content", defaultTitle);
-    if (tw) tw.setAttribute("content", defaultTitle);
-    return;
-  }
-
-  // твой формат: "XXXTentacion – Moonlight (FL Studio Project)"
-  const newTitle = `${project.displayTitle} (FL Studio Project)`;
-
-  document.title = newTitle;
-
-  const og = document.getElementById("ogTitle");
-  const tw = document.getElementById("twTitle");
-  if (og) og.setAttribute("content", newTitle);
-  if (tw) tw.setAttribute("content", newTitle);
-}
 
 
 
@@ -804,7 +782,6 @@ function setVideo(project, fallback = null, autoplay = false) {
 function highlightVideo(project, autoplay = false) {
   renderHeroData(project);
   setVideo(project, null, autoplay);
-  updatePageTitle(project); // <-- добавили
 
   if (project) {
     const url = new URL(window.location.href);
@@ -812,6 +789,7 @@ function highlightVideo(project, autoplay = false) {
     window.history.replaceState({}, "", url.toString());
   }
 }
+
 
 
 /* CAROUSEL */
@@ -1050,6 +1028,22 @@ function setupModal() {
   if (searchInput) searchInput.addEventListener("input", fillModal);
 }
 
+let titleWasSet = false;
+
+function setInitialPageTitle(project) {
+  if (titleWasSet) return;
+  titleWasSet = true;
+
+  const base = "Pereponka Beats";
+  if (!project) {
+    document.title = `${base} — FL Studio Projects Library`;
+    return;
+  }
+
+  // Формат: "Pereponka Beats — Название песни"
+  document.title = `${base} — ${project.displayTitle}`;
+}
+
 /* INIT */
 document.addEventListener("DOMContentLoaded", async () => {
   await loadProjectsFromCSV();
@@ -1068,10 +1062,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (match) {
+    setInitialPageTitle(match);          // <-- title ставим тут один раз
     highlightVideo(match, fromYouTube);
   } else if (PROJECTS.length) {
+    setInitialPageTitle(PROJECTS[0]);    // <-- если нет project в URL
     highlightVideo(PROJECTS[0], false);
   } else {
+    setInitialPageTitle(null);           // <-- дефолт
     renderHeroData(null);
   }
 });
