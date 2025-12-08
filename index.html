@@ -474,7 +474,6 @@
     .projects-list-tier-header {
       display: flex;
       align-items: center;
-      gap: 6px;
       justify-content: flex-start;
     }
 
@@ -489,7 +488,6 @@
       line-height: 1;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
       white-space: nowrap;
       transition: background .15s ease, border-color .15s ease, transform .1s ease;
     }
@@ -682,9 +680,8 @@
         <div>#</div>
         <div>Project title</div>
         <div class="projects-list-tier-header">
-          <span>Tier</span>
           <button type="button" class="tier-filter-btn" id="tierFilterBtn">
-            All
+            Tier: All
           </button>
         </div>
       </div>
@@ -866,14 +863,12 @@ function buildCarousel() {
     `;
 
     card.addEventListener("click", () => {
-      // 📌 отправляем событие в Метрику
       ym(105459376, "reachGoal", "project_open", {
         project_id: project.videoId,
         project_title: project.displayTitle,
         tier: project.tier
       });
 
-      // запускаем открытие проекта
       highlightVideo(project, true);
     });
 
@@ -931,7 +926,7 @@ function setupCarouselSwipeTouchOnly() {
     window.matchMedia("(pointer: coarse)").matches ||
     window.matchMedia("(hover: none)").matches;
 
-  if (!isTouchDevice) return; // <-- на десктопе свайпов нет
+  if (!isTouchDevice) return;
 
   const viewport = document.getElementById("projectsViewport");
   const track = document.getElementById("projectsTrack");
@@ -943,7 +938,7 @@ function setupCarouselSwipeTouchOnly() {
   let dx = 0;
   let didMove = false;
 
-  const THRESHOLD = 60; // px
+  const THRESHOLD = 60;
 
   function onStart(clientX, clientY) {
     isDown = true;
@@ -1035,7 +1030,7 @@ function highlightText(text, query) {
   const safeText = escapeHtml(text);
   if (!query) return safeText;
 
-  const q = String(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex chars
+  const q = String(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (!q) return safeText;
 
   const re = new RegExp(q, "ig");
@@ -1049,13 +1044,10 @@ function matchesTierFilter(project) {
     case "all":
       return true;
     case "Gold":
-      // только Gold-проекты
       return t === "Gold";
     case "Diamond":
-      // Gold + Diamond
       return t === "Gold" || t === "Diamond";
     case "Exclusive":
-      // Gold + Diamond + Exclusive
       return t === "Gold" || t === "Diamond" || t === "Exclusive";
     default:
       return true;
@@ -1068,20 +1060,17 @@ function fillModal() {
   const searchInput = document.getElementById("searchInput");
   const rawSearch = searchInput ? searchInput.value : "";
   const searchValue = rawSearch.toLowerCase();
-  const tierFilter = currentTierFilter || "all";
 
   if (!list) return;
   list.innerHTML = "";
 
   ALL_PROJECTS
-    // фильтр по поиску: ищем и в title, и в tier
     .filter(p => {
       if (!searchValue) return true;
       const title = (p.displayTitle || "").toLowerCase();
       const tierText = (p.tier || "").toLowerCase();
       return title.includes(searchValue) || tierText.includes(searchValue);
     })
-    // фильтр по tier
     .filter(p => matchesTierFilter(p))
     .forEach((p, i) => {
       const row = document.createElement("div");
@@ -1163,7 +1152,7 @@ function setupTierFilter() {
         break;
     }
 
-    btn.textContent = label;
+    btn.textContent = `Tier: ${label}`;
     btn.title = tooltip;
   }
 
@@ -1206,9 +1195,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (ALL_PROJECTS.length) {
     buildCarousel();
     setupCarouselControls();
-    setupCarouselSwipeTouchOnly(); // <-- только touch
+    setupCarouselSwipeTouchOnly();
     setupModal();
-    setupTierFilter();             // 🎯 кнопка фильтра tier с подсказкой
+    setupTierFilter();
     fillModal();
   }
 
@@ -1218,13 +1207,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (match) {
-    setInitialPageTitle(match);          // <-- title ставим тут один раз
+    setInitialPageTitle(match);
     highlightVideo(match, fromYouTube);
   } else if (PROJECTS.length) {
-    setInitialPageTitle(PROJECTS[0]);    // <-- если нет project в URL
+    setInitialPageTitle(PROJECTS[0]);
     highlightVideo(PROJECTS[0], false);
   } else {
-    setInitialPageTitle(null);           // <-- дефолт
+    setInitialPageTitle(null);
     renderHeroData(null);
   }
 });
