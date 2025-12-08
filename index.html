@@ -407,7 +407,7 @@
     /* ФИКСИРОВАННАЯ высота окна списка */
     .modal-body {
       padding-bottom: 12px;
-      height: 420px;        /* <-- как было */
+      height: 420px;
       overflow-y: auto;
       overflow-x: hidden;
       flex-shrink: 0;
@@ -470,6 +470,36 @@
       transform: translateY(-1px);
     }
 
+    /* --- TIER FILTER HEADER + BUTTON --- */
+    .projects-list-tier-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-start;
+    }
+
+    .tier-filter-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #10131e;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 3px 8px;
+      cursor: pointer;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: background .15s ease, border-color .15s ease, transform .1s ease;
+    }
+
+    .tier-filter-btn:hover {
+      background: #1a2030;
+      border-color: #7faaff;
+      transform: translateY(-1px);
+    }
+
     /* ---------------------------------------------------------
        MOBILE POLISH
     --------------------------------------------------------- */
@@ -509,7 +539,7 @@
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
       (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}};
           m[i].l=1*new Date();
           for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
@@ -643,7 +673,12 @@
       <div class="projects-list-header">
         <div>#</div>
         <div>Project title</div>
-        <div>Tier</div>
+        <div class="projects-list-tier-header">
+          <span>Tier</span>
+          <button type="button" class="tier-filter-btn" id="tierFilterBtn">
+            All
+          </button>
+        </div>
       </div>
 
       <div id="projectsList"></div>
@@ -660,6 +695,11 @@ let loopProjects = [];
 let loopOffset = 0;
 let carouselIndex = 0;
 let cardStep = 260;
+
+// --- фильтр по tier ---
+let TIER_FILTER_OPTIONS = ["all"];
+let currentTierFilter = "all";
+let currentTierFilterIndex = 0;
 
 const urlParams = new URLSearchParams(window.location.search);
 const highlightedVideoId = urlParams.get("project");
@@ -732,6 +772,15 @@ async function loadProjectsFromCSV() {
 
     PROJECTS = popular.length ? popular : ALL_PROJECTS.slice(0, 10);
 
+    // 🎯 сформируем список доступных tier'ов для фильтра
+    const uniqueTiers = Array.from(
+      new Set(ALL_PROJECTS.map(p => p.tier).filter(Boolean))
+    ).sort();
+
+    TIER_FILTER_OPTIONS = ["all", ...uniqueTiers];
+    currentTierFilter = "all";
+    currentTierFilterIndex = 0;
+
   } catch (e) {
     console.error("Failed to load youtube_videos.csv", e);
   }
@@ -757,10 +806,6 @@ function renderHeroData(project) {
   subtitle.textContent = "This FL Studio project will be included in your Patreon membership.";
   note.innerHTML = `Included in: <strong>${project.tier}</strong> tier and above`;
 }
-
-
-
-
 
 function setVideo(project, fallback = null, autoplay = false) {
   const frame = document.getElementById("ytFrame");
@@ -790,8 +835,6 @@ function highlightVideo(project, autoplay = false) {
   }
 }
 
-
-
 /* CAROUSEL */
 function buildCarousel() {
   const track = document.getElementById("projectsTrack");
@@ -806,33 +849,32 @@ function buildCarousel() {
   loopOffset = clonesBefore.length;
 
   loopProjects.forEach(project => {
-  const card = document.createElement("article");
-  card.className = "card";
-  card.innerHTML = `
-    <div class="card-thumb">
-      <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
-    </div>
-    <div class="card-title">${project.displayTitle}</div>
-    <div class="card-footer">
-      Included in: <strong>${project.tier}</strong> tier
-    </div>
-  `;
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-thumb">
+        <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="card-title">${project.displayTitle}</div>
+      <div class="card-footer">
+        Included in: <strong>${project.tier}</strong> tier
+      </div>
+    `;
 
-  card.addEventListener("click", () => {
-    // 📌 отправляем событие в Метрику
-    ym(105459376, "reachGoal", "project_open", {
-      project_id: project.videoId,
-      project_title: project.displayTitle,
-      tier: project.tier
+    card.addEventListener("click", () => {
+      // 📌 отправляем событие в Метрику
+      ym(105459376, "reachGoal", "project_open", {
+        project_id: project.videoId,
+        project_title: project.displayTitle,
+        tier: project.tier
+      });
+
+      // запускаем открытие проекта
+      highlightVideo(project, true);
     });
 
-    // запускаем открытие проекта
-    highlightVideo(project, true);
+    track.appendChild(card);
   });
-
-  track.appendChild(card);
-});
-
 
   const first = track.querySelector(".card");
   if (first) cardStep = first.offsetWidth + 16;
@@ -974,12 +1016,14 @@ function closeModal() {
 function fillModal() {
   const list = document.getElementById("projectsList");
   const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  const tierFilter = currentTierFilter || "all";
 
   if (!list) return;
   list.innerHTML = "";
 
   ALL_PROJECTS
     .filter(p => p.displayTitle.toLowerCase().includes(searchValue))
+    .filter(p => tierFilter === "all" || p.tier === tierFilter)
     .forEach((p, i) => {
       const row = document.createElement("div");
       row.className = "projects-list-row";
@@ -1028,6 +1072,36 @@ function setupModal() {
   if (searchInput) searchInput.addEventListener("input", fillModal);
 }
 
+/* TIER FILTER SETUP */
+function setupTierFilter() {
+  const btn = document.getElementById("tierFilterBtn");
+  if (!btn || !TIER_FILTER_OPTIONS.length) return;
+
+  function updateBtnLabel() {
+    if (currentTierFilter === "all") {
+      btn.textContent = "All";
+    } else {
+      btn.textContent = currentTierFilter;
+    }
+  }
+
+  btn.addEventListener("click", () => {
+    currentTierFilterIndex = (currentTierFilterIndex + 1) % TIER_FILTER_OPTIONS.length;
+    currentTierFilter = TIER_FILTER_OPTIONS[currentTierFilterIndex];
+
+    updateBtnLabel();
+    fillModal();
+
+    if (typeof ym === "function") {
+      ym(105459376, "reachGoal", "tier_filter_change", {
+        tier: currentTierFilter
+      });
+    }
+  });
+
+  updateBtnLabel();
+}
+
 let titleWasSet = false;
 
 function setInitialPageTitle(project) {
@@ -1040,7 +1114,6 @@ function setInitialPageTitle(project) {
     return;
   }
 
-  // Формат: "Pereponka Beats — Название песни"
   document.title = `${base} — ${project.displayTitle}`;
 }
 
@@ -1053,6 +1126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupCarouselControls();
     setupCarouselSwipeTouchOnly(); // <-- только touch
     setupModal();
+    setupTierFilter();             // 🎯 кнопка фильтра tier
     fillModal();
   }
 
@@ -1076,8 +1150,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 </body>
 </html>
-
-
-
-
-
