@@ -500,6 +500,14 @@
       transform: translateY(-1px);
     }
 
+    /* --- SEARCH HIGHLIGHT --- */
+    .search-highlight {
+      background: rgba(255,204,77,0.35);
+      color: var(--text);
+      padding: 0 1px;
+      border-radius: 2px;
+    }
+
     /* ---------------------------------------------------------
        MOBILE POLISH
     --------------------------------------------------------- */
@@ -539,7 +547,7 @@
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
       (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}};
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
           m[i].l=1*new Date();
           for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
@@ -666,7 +674,7 @@
     </div>
 
     <div class="modal-search">
-      <input type="text" id="searchInput" placeholder="Search projects..." />
+      <input type="text" id="searchInput" placeholder="Search projects or tiers (e.g. “gold”)..." />
     </div>
 
     <div class="modal-body">
@@ -697,7 +705,12 @@ let carouselIndex = 0;
 let cardStep = 260;
 
 // --- фильтр по tier ---
-let TIER_FILTER_OPTIONS = ["all"];
+// Логика:
+// All       – все проекты
+// Gold      – только Gold
+// Diamond   – Gold + Diamond
+// Exclusive – Gold + Diamond + Exclusive
+let TIER_FILTER_OPTIONS = ["all", "Gold", "Diamond", "Exclusive"];
 let currentTierFilter = "all";
 let currentTierFilterIndex = 0;
 
@@ -771,15 +784,6 @@ async function loadProjectsFromCSV() {
       .sort((a, b) => a.top - b.top);
 
     PROJECTS = popular.length ? popular : ALL_PROJECTS.slice(0, 10);
-
-    // 🎯 сформируем список доступных tier'ов для фильтра
-    const uniqueTiers = Array.from(
-      new Set(ALL_PROJECTS.map(p => p.tier).filter(Boolean))
-    ).sort();
-
-    TIER_FILTER_OPTIONS = ["all", ...uniqueTiers];
-    currentTierFilter = "all";
-    currentTierFilterIndex = 0;
 
   } catch (e) {
     console.error("Failed to load youtube_videos.csv", e);
@@ -998,7 +1002,7 @@ function setupCarouselSwipeTouchOnly() {
   viewport.addEventListener("touchcancel", onEnd, { passive: true });
 }
 
-/* MODAL */
+/* MODAL OPEN/CLOSE */
 function openModal() {
   const modal = document.getElementById("projectsModal");
   if (!modal) return;
@@ -1013,25 +1017,83 @@ function closeModal() {
   modal.setAttribute("aria-hidden", "true");
 }
 
+/* UTILS: ESCAPE + HIGHLIGHT */
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, function(ch) {
+    switch (ch) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      case "'": return "&#39;";
+      default: return ch;
+    }
+  });
+}
+
+function highlightText(text, query) {
+  const safeText = escapeHtml(text);
+  if (!query) return safeText;
+
+  const q = String(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex chars
+  if (!q) return safeText;
+
+  const re = new RegExp(q, "ig");
+  return safeText.replace(re, (match) => `<span class="search-highlight">${match}</span>`);
+}
+
+/* TIER FILTER LOGIC */
+function matchesTierFilter(project) {
+  const t = project.tier;
+  switch (currentTierFilter) {
+    case "all":
+      return true;
+    case "Gold":
+      // только Gold-проекты
+      return t === "Gold";
+    case "Diamond":
+      // Gold + Diamond
+      return t === "Gold" || t === "Diamond";
+    case "Exclusive":
+      // Gold + Diamond + Exclusive
+      return t === "Gold" || t === "Diamond" || t === "Exclusive";
+    default:
+      return true;
+  }
+}
+
+/* FILL MODAL LIST */
 function fillModal() {
   const list = document.getElementById("projectsList");
-  const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  const searchInput = document.getElementById("searchInput");
+  const rawSearch = searchInput ? searchInput.value : "";
+  const searchValue = rawSearch.toLowerCase();
   const tierFilter = currentTierFilter || "all";
 
   if (!list) return;
   list.innerHTML = "";
 
   ALL_PROJECTS
-    .filter(p => p.displayTitle.toLowerCase().includes(searchValue))
-    .filter(p => tierFilter === "all" || p.tier === tierFilter)
+    // фильтр по поиску: ищем и в title, и в tier
+    .filter(p => {
+      if (!searchValue) return true;
+      const title = (p.displayTitle || "").toLowerCase();
+      const tierText = (p.tier || "").toLowerCase();
+      return title.includes(searchValue) || tierText.includes(searchValue);
+    })
+    // фильтр по tier
+    .filter(p => matchesTierFilter(p))
     .forEach((p, i) => {
       const row = document.createElement("div");
       row.className = "projects-list-row";
 
+      const highlightedTitle = highlightText(p.displayTitle || "", rawSearch);
+      const highlightedTier = highlightText(p.tier || "", rawSearch);
+
       row.innerHTML = `
         <div class="projects-list-index">${i + 1}</div>
-        <div class="projects-list-title" title="${p.displayTitle}">${p.displayTitle}</div>
-        <div class="projects-list-tier">${p.tier}</div>
+        <div class="projects-list-title" title="${escapeHtml(p.displayTitle || "")}">${highlightedTitle}</div>
+        <div class="projects-list-tier">${highlightedTier}</div>
         <button class="projects-list-play-btn">
           <span>▶</span> Play
         </button>
@@ -1051,6 +1113,7 @@ function fillModal() {
     });
 }
 
+/* MODAL SETUP */
 function setupModal() {
   const openBtn = document.getElementById("seeAllBtn");
   const modal = document.getElementById("projectsModal");
@@ -1072,24 +1135,43 @@ function setupModal() {
   if (searchInput) searchInput.addEventListener("input", fillModal);
 }
 
-/* TIER FILTER SETUP */
+/* TIER FILTER SETUP + TOOLTIP */
 function setupTierFilter() {
   const btn = document.getElementById("tierFilterBtn");
   if (!btn || !TIER_FILTER_OPTIONS.length) return;
 
-  function updateBtnLabel() {
-    if (currentTierFilter === "all") {
-      btn.textContent = "All";
-    } else {
-      btn.textContent = currentTierFilter;
+  function updateBtnLabelAndTooltip() {
+    let label = "All";
+    let tooltip = "Showing all projects (Gold, Diamond, Exclusive).";
+
+    switch (currentTierFilter) {
+      case "all":
+        label = "All";
+        tooltip = "Showing all projects (Gold, Diamond, Exclusive).";
+        break;
+      case "Gold":
+        label = "Gold";
+        tooltip = "Gold – only projects available on Gold tier.";
+        break;
+      case "Diamond":
+        label = "Diamond";
+        tooltip = "Diamond – Gold + Diamond projects.";
+        break;
+      case "Exclusive":
+        label = "Exclusive";
+        tooltip = "Exclusive – Gold + Diamond + Exclusive projects.";
+        break;
     }
+
+    btn.textContent = label;
+    btn.title = tooltip;
   }
 
   btn.addEventListener("click", () => {
     currentTierFilterIndex = (currentTierFilterIndex + 1) % TIER_FILTER_OPTIONS.length;
     currentTierFilter = TIER_FILTER_OPTIONS[currentTierFilterIndex];
 
-    updateBtnLabel();
+    updateBtnLabelAndTooltip();
     fillModal();
 
     if (typeof ym === "function") {
@@ -1099,7 +1181,7 @@ function setupTierFilter() {
     }
   });
 
-  updateBtnLabel();
+  updateBtnLabelAndTooltip();
 }
 
 let titleWasSet = false;
@@ -1126,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupCarouselControls();
     setupCarouselSwipeTouchOnly(); // <-- только touch
     setupModal();
-    setupTierFilter();             // 🎯 кнопка фильтра tier
+    setupTierFilter();             // 🎯 кнопка фильтра tier с подсказкой
     fillModal();
   }
 
