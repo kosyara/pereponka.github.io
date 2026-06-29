@@ -281,6 +281,19 @@
       background: #1e293b;
     }
 
+    .card-thumb.thumb-placeholder {
+      background: linear-gradient(135deg, #1a1f2e, #0f1320);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-thumb.thumb-placeholder::after {
+      content: "🎵";
+      font-size: 28px;
+      opacity: 0.4;
+    }
+
     .card-title {
       font-size: 14px;
       font-weight: 600;
@@ -790,10 +803,10 @@ async function loadProjectsFromCSV() {
       });
 
     const popular = ALL_PROJECTS
-      .filter(p => p.top > 0)
+      .filter(p => p.top > 0 && p.thumb)
       .sort((a, b) => a.top - b.top);
 
-    PROJECTS = popular.length ? popular : ALL_PROJECTS.slice(0, 10);
+    PROJECTS = popular.length ? popular : ALL_PROJECTS.filter(p => p.thumb).slice(0, 10);
 
   } catch (e) {
     console.error("Failed to load youtube_videos.csv", e);
@@ -859,7 +872,7 @@ function buildCarousel() {
     card.className = "card";
     card.innerHTML = `
       <div class="card-thumb">
-        <img src="${project.thumb}" style="width:100%;height:100%;object-fit:cover;">
+        <img src="${project.thumb || ''}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentNode.classList.add('thumb-placeholder')">
       </div>
       <div class="card-title">${project.displayTitle}</div>
       <div class="card-footer">
