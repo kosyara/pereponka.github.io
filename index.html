@@ -771,16 +771,20 @@ async function loadProjectsFromCSV() {
     const rows = parseCSV(csv);
 
     ALL_PROJECTS = rows
-      .filter(r => r.video_id && r.video_id.trim() !== "")
+      .filter(r => r.patreon_id && r.patreon_id.trim() !== "")
       .map(r => {
-        const id = r.video_id.trim();
+        const patreonId = r.patreon_id.trim();
+        const videoId = (r.video_id || "").trim();
         const topNum = parseInt((r.top || "").trim(), 10);
         return {
-          videoId: id,
+          videoId: patreonId,
+          patreonId: patreonId,
           displayTitle: (r.title || "Untitled project").trim(),
           tier: (r.tier || "Gold").trim(),
           top: Number.isFinite(topNum) ? topNum : 0,
-          thumb: `https://img.youtube.com/vi/${id}/hqdefault.jpg`
+          thumb: videoId
+            ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+            : `https://www.patreon.com/file?h=${patreonId}&i=0`
         };
       });
 
@@ -830,7 +834,7 @@ function setVideo(project, fallback = null, autoplay = false) {
     modestbranding: "1"
   });
 
-  frame.src = `https://www.youtube.com/embed/${id}?${params.toString()}`;
+  frame.src = `https://www.patreon.com/posts/${id}/embed`;
 }
 
 function highlightVideo(project, autoplay = false) {
