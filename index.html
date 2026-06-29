@@ -821,14 +821,84 @@
       100% { background-position: -200% 0; }
     }
 
+    /* ─── HAMBURGER ─── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      margin-left: 12px;
+    }
+    .nav-hamburger span {
+      width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all .2s;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 52px; left: 0; right: 0;
+      background: rgba(14,14,14,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 199;
+      padding: 12px 0;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a, .mobile-menu button {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color .15s;
+    }
+    .mobile-menu a:hover, .mobile-menu button:hover { color: var(--fl); }
+
     /* ─── MOBILE ─── */
     @media (max-width: 860px) {
-      .hero { flex-direction: column; padding: 80px 24px 48px; gap: 40px; }
+      .hero { flex-direction: column; padding: 80px 20px 48px; gap: 32px; }
       .hero-right { max-width: 100%; width: 100%; }
-      .section { padding: 60px 20px; }
-      .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .hero h1 { font-size: clamp(52px, 14vw, 80px); }
+      .hero-desc { font-size: 14px; }
+      .hero-btns { flex-direction: column; gap: 10px; }
+      .hero-btns a, .hero-btns button { width: 100%; justify-content: center; }
+      .hero-stats { gap: 20px; }
+      .hero-stat-num { font-size: 32px; }
+
+      .section { padding: 48px 20px; }
+      .section-h2 { font-size: clamp(28px, 8vw, 48px); }
+
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
       nav { padding: 0 16px; }
       .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .tiers-grid { grid-template-columns: 1fr; gap: 16px; }
+      .tier-card { padding: 20px; }
+
+      .hero-stats { flex-wrap: wrap; }
+
+      .artist-tags { gap: 6px; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 70px 16px 40px; }
+      .hero h1 { font-size: clamp(44px, 13vw, 64px); }
+      .section { padding: 36px 16px; }
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .cat-card { border-radius: 6px; }
+      .fl-panel { display: none; }
     }
   </style>
 </head>
@@ -848,7 +918,18 @@
     <button class="nav-link" onclick="showPage('membership')">Membership</button>
   </div>
   <a class="nav-cta" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">Join Patreon</a>
+  <div class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button onclick="showPage('home');toggleMobileMenu()">Home</button>
+  <button onclick="showPage('catalog');toggleMobileMenu()">Catalog</button>
+  <button onclick="showPage('membership');toggleMobileMenu()">Membership</button>
+  <a href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener" onclick="toggleMobileMenu()">Join Patreon</a>
+</div>
 
 <!-- ═══ HOME PAGE ═══ -->
 <div id="page-home" class="page active grid-bg">
@@ -1251,6 +1332,20 @@ let currentTier = 'all';
 let displayCount = 50;
 
 // ─── PAGE NAV ───
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+
+// Close mobile menu on outside click
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('mobileMenu');
+  const hamburger = document.getElementById('hamburger');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !hamburger.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
