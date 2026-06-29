@@ -618,17 +618,20 @@
 
     <aside class="hero-media" id="highlightCard">
       <div class="hero-media-video">
-        <div style="position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;">
-          <iframe
-            id="ytFrame"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
-            src=""
-            allow="fullscreen; autoplay"
-            allowfullscreen>
-          </iframe>
-        </div>
+        <a id="patreonLink" href="#" target="_blank" rel="noopener"
+           style="display:block;position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;text-decoration:none;">
+          <img id="thumbImg" src=""
+               style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:14px;"
+               alt="Project preview">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);">
+            <div style="background:#ff424d;color:#fff;font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;display:flex;align-items:center;gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.82 2.41C18.78 2.41 22 5.65 22 9.62c0 3.96-3.22 7.19-7.18 7.19H12v4.78L2 12l10-9.59v4.78h2.82z"/></svg>
+              Watch on Patreon
+            </div>
+          </div>
+        </a>
         <div class="hero-media-meta" id="projectNote">
-          Video from your YouTube link will appear here.
+          Click to watch this project on Patreon.
         </div>
       </div>
     </aside>
@@ -782,9 +785,7 @@ async function loadProjectsFromCSV() {
           displayTitle: (r.title || "Untitled project").trim(),
           tier: (r.tier || "Gold").trim(),
           top: Number.isFinite(topNum) ? topNum : 0,
-          thumb: videoId
-            ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-            : `https://www.patreon.com/file?h=${patreonId}&i=0`
+          thumb: (r.thumb_url || "").trim()
         };
       });
 
@@ -821,20 +822,12 @@ function renderHeroData(project) {
 }
 
 function setVideo(project, fallback = null, autoplay = false) {
-  const frame = document.getElementById("ytFrame");
-  const id = project?.videoId || fallback;
-  if (!frame || !id) {
-    if (frame) frame.src = "";
-    return;
-  }
+  const link = document.getElementById("patreonLink");
+  const thumb = document.getElementById("thumbImg");
+  if (!link || !thumb || !project) return;
 
-  const params = new URLSearchParams({
-    autoplay: autoplay ? "1" : "0",
-    rel: "0",
-    modestbranding: "1"
-  });
-
-  frame.src = `https://www.patreon.com/posts/${id}/embed`;
+  link.href = `https://www.patreon.com/posts/${project.patreonId}`;
+  thumb.src = project.thumb;
 }
 
 function highlightVideo(project, autoplay = false) {
