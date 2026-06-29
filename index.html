@@ -2,1240 +2,1567 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pereponka Beats – FL Studio Projects Library</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <title>Pereponka Beats — FL Studio Projects Library</title>
+  <meta name="description" content="1470+ FL Studio remakes. Full FLPs, stems, breakdowns. Join Pereponka Beats on Patreon.">
   <style>
-    /* ---------------------------------------------------------
-       BASE DESIGN SYSTEM
-    --------------------------------------------------------- */
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+
     :root {
-      --bg: #06070d;
-      --bg-alt: #0d0f16;
-      --card: #131620;
-      --accent: #ffcc4d;
-      --accent-soft: rgba(255,204,77,0.14);
-      --text: #f5f5f7;
-      --muted: #9ca3af;
-      --border: #1f2530;
-
-      --radius-lg: 18px;
-      --radius-xl: 26px;
-
-      --shadow-lg: 0 24px 60px rgba(0,0,0,0.55);
-      --shadow-card: 0 14px 44px rgba(0,0,0,0.40);
-
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color-scheme: dark;
+      --bg:       #0e0e0e;
+      --bg2:      #141414;
+      --bg3:      #1a1a1a;
+      --panel:    #1e1e1e;
+      --border:   #2a2a2a;
+      --border2:  #333;
+      --fl:       #ff8c00;      /* FL Studio orange */
+      --fl2:      #ffb347;
+      --gold:     #f5c518;
+      --green:    #7ed321;      /* FL Studio channel green */
+      --text:     #e8e8e8;
+      --muted:    #777;
+      --muted2:   #555;
+      --diamond:  #5bc4e8;
+      --exclusive:#b87fff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: radial-gradient(circle at top, #111827 0%, #030415 60%, #000 100%);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    .page {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 16px 80px;
+    /* ─── GRID TEXTURE ─── */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,140,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,140,0,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
 
-    /* ---------------------------------------------------------
-       HEADER
-    --------------------------------------------------------- */
-    header {
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 52px;
+      background: rgba(14,14,14,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 32px;
+      padding: 0 28px;
+      gap: 0;
     }
 
-    .logo {
+    /* FL Studio-style title bar buttons */
+    .nav-dots {
+      display: flex; gap: 6px; margin-right: 20px;
+    }
+    .nav-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+    }
+    .nav-dot:nth-child(1) { background: #ff5f57; }
+    .nav-dot:nth-child(2) { background: #febc2e; }
+    .nav-dot:nth-child(3) { background: #28c840; }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.12em;
+      color: var(--fl);
+      flex: 1;
+    }
+
+    .nav-logo span { color: var(--text); }
+
+    .nav-links {
+      display: flex; gap: 4px; margin-right: 20px;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+      cursor: pointer;
+      border: none; background: none;
+    }
+    .nav-link:hover { color: var(--text); background: var(--bg3); }
+    .nav-link.active { color: var(--fl); }
+
+    .nav-cta {
+      background: var(--fl);
+      color: #000;
       font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background .15s, transform .1s;
+      letter-spacing: 0.02em;
     }
+    .nav-cta:hover { background: var(--fl2); transform: translateY(-1px); }
 
-    /* ---------------------------------------------------------
-       HERO SECTION
-    --------------------------------------------------------- */
+    /* ─── PAGES ─── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── HERO ─── */
     .hero {
-      background: linear-gradient(135deg, #171b25 0%, #0a0c12 100%);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border);
-      padding: 34px 28px 30px;
-      box-shadow: var(--shadow-lg);
-
-      display: grid;
-      grid-template-columns: 3fr 3.4fr;
-      gap: 32px;
-    }
-
-    /* На мобильных: YouTube-окно сверху */
-    @media (max-width: 820px) {
-      .hero {
-        display: flex;
-        flex-direction: column;
-        padding: 28px 22px 26px;
-        gap: 18px;
-      }
-      .hero-media { order: -1; }
-    }
-
-    .hero-title {
-      font-size: 28px;
-      line-height: 1.22;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .hero-project {
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-
-    .hero-sub {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 18px;
-    }
-
-    .hero-list {
-      list-style: none;
-      margin-bottom: 24px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .hero-list li {
+      min-height: 100vh;
       display: flex;
-      gap: 8px;
-      margin-bottom: 6px;
       align-items: center;
+      padding: 80px 60px 60px;
+      gap: 60px;
+      max-width: 1300px;
+      margin: 0 auto;
     }
 
-    .hero-list li::before {
-      content: "✓";
-      color: var(--accent);
-      font-size: 14px;
-    }
+    .hero-left { flex: 1; }
 
-    .btn-primary {
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      padding: 12px 22px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-
-      background: linear-gradient(135deg, #ffd84a, #ff9e2f);
-      color: #0d0d10;
-
-      box-shadow: 0 14px 36px rgba(255,200,40,0.45);
-      transition: transform .12s ease, box-shadow .15s ease;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fl);
+      border: 1px solid rgba(255,140,0,0.3);
+      border-radius: 4px;
+      padding: 5px 12px;
+      margin-bottom: 28px;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 40px rgba(255,200,40,0.65);
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 2s infinite;
     }
 
-    /* HERO MEDIA */
-    .hero-media {
-      background: linear-gradient(140deg, #1f2634, #0a0d14 70%);
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-card);
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
-    .hero-media-meta {
-      font-size: 12px;
-      margin-top: 10px;
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 9vw, 130px);
+      line-height: 0.92;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 .line1 { color: var(--text); display: block; }
+    .hero h1 .line2 {
+      color: var(--fl);
+      display: block;
+      text-shadow: 0 0 60px rgba(255,140,0,0.3);
+    }
+    .hero h1 .line3 { color: var(--muted2); display: block; }
+
+    .hero-desc {
+      font-size: 16px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 36px;
     }
 
-    /* ---------------------------------------------------------
-       SECTION HEADERS
-    --------------------------------------------------------- */
-    .section {
-      margin-top: 40px;
+    .hero-desc strong { color: var(--text); }
+
+    .hero-btns {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 48px;
     }
 
-    .section-title-row {
+    .btn-orange {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--fl);
+      color: #000;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px 26px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background .15s, transform .12s;
+      letter-spacing: 0.01em;
+    }
+    .btn-orange:hover { background: var(--fl2); transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 13px 26px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color .15s, transform .12s;
+    }
+    .btn-ghost:hover { border-color: var(--fl); transform: translateY(-2px); }
+
+    /* stats row */
+    .hero-stats {
+      display: flex; gap: 32px; flex-wrap: wrap;
+    }
+
+    .hero-stat {}
+    .hero-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      color: var(--fl);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ─── FL STUDIO PANEL (right side) ─── */
+    .hero-right {
+      flex: 1;
+      max-width: 520px;
+    }
+
+    .fl-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,140,0,0.05);
+    }
+
+    .fl-titlebar {
+      background: #111;
+      padding: 8px 14px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fl-titlebar-dots { display: flex; gap: 5px; }
+    .fl-titlebar-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .fl-titlebar-dots span:nth-child(1) { background: #ff5f57; }
+    .fl-titlebar-dots span:nth-child(2) { background: #febc2e; }
+    .fl-titlebar-dots span:nth-child(3) { background: #28c840; }
+
+    .fl-titlebar-name {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Piano roll */
+    .fl-pianoroll {
+      display: flex;
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .fl-keys {
+      width: 24px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .fl-key {
+      flex: 1;
+      background: #1a1a1a;
+      border-bottom: 1px solid #111;
+    }
+
+    .fl-key.black { background: #0a0a0a; }
+
+    .fl-roll {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 100% calc(180px/16), 40px 100%;
+    }
+
+    .fl-note {
+      position: absolute;
+      height: calc(180px/16 - 2px);
+      border-radius: 2px;
+      background: var(--fl);
+      opacity: 0.85;
+    }
+
+    /* Channel rack */
+    .fl-channels {
+      border-top: 1px solid var(--border);
+      padding: 10px 0;
+    }
+
+    .fl-channel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 14px;
+      transition: background .1s;
+    }
+    .fl-channel:hover { background: rgba(255,255,255,0.04); }
+
+    .fl-channel-color {
+      width: 12px; height: 30px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .fl-channel-name {
+      font-size: 12px;
+      color: #bbb;
+      flex: 1;
+    }
+
+    .fl-channel-vol {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      flex: 1;
+      max-width: 100px;
+      overflow: hidden;
+    }
+
+    .fl-channel-vol-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--fl);
+    }
+
+    .fl-channel-led {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Waveform at bottom */
+    .fl-waveform {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .waveform-bars {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      height: 32px;
+      flex: 1;
+    }
+
+    .waveform-bar {
+      width: 3px;
+      border-radius: 1px;
+      background: var(--fl);
+      opacity: 0.6;
+    }
+
+    .fl-bpm {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--fl);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .fl-bpm span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      display: block;
+      text-align: center;
+    }
+
+    /* ─── SECTION COMMON ─── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .section-header {
+      margin-bottom: 48px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fl);
+      margin-bottom: 12px;
+    }
+
+    .section-h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.65;
+    }
+
+    /* ─── FEATURES ─── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .feat {
+      background: var(--bg2);
+      padding: 28px 26px;
+      transition: background .2s;
+    }
+    .feat:hover { background: var(--bg3); }
+
+    .feat-icon {
+      font-size: 26px;
+      margin-bottom: 14px;
+    }
+
+    .feat-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .feat-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── CATALOG ─── */
+    .catalog-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .search-box::placeholder { color: var(--muted2); }
+    .search-box:focus { border-color: var(--fl); }
+
+    .filter-btns {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      background: var(--panel);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .filter-btn:hover { border-color: var(--fl); color: var(--text); }
+    .filter-btn.active { background: var(--fl); border-color: var(--fl); color: #000; }
+
+    .artist-tag {
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      background: transparent;
+      color: #888;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .artist-tag:hover { border-color: var(--fl); color: var(--fl); }
+    .artist-tag.active { background: rgba(255,140,0,0.12); border-color: var(--fl); color: var(--fl); }
+    .filter-btn.active.diamond { background: var(--diamond); border-color: var(--diamond); }
+    .filter-btn.active.gold { background: var(--gold); border-color: var(--gold); }
+    .filter-btn.active.exclusive { background: var(--exclusive); border-color: var(--exclusive); }
+
+    .catalog-count {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 12px;
     }
 
-    .section-title {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    /* ---------------------------------------------------------
-       CAROUSEL
-    --------------------------------------------------------- */
-    .projects-carousel {
-      position: relative;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .projects-viewport {
+    .cat-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
       overflow: hidden;
+      cursor: pointer;
+      transition: border-color .2s, transform .2s;
+      text-decoration: none;
+      display: block;
+    }
+    .cat-card:hover {
+      border-color: var(--fl);
+      transform: translateY(-3px);
+    }
+
+    .cat-thumb {
       width: 100%;
-      touch-action: pan-y; /* вертикальный скролл страницы не ломается */
+      aspect-ratio: 1/1;
+      background: #1a1a1a;
+      position: relative;
+      overflow: hidden;
     }
 
-    .projects-track {
-      display: flex;
-      gap: 16px;
-      transition: transform .28s ease;
-      will-change: transform;
+    .cat-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .carousel-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #0d111c;
+    .cat-thumb-placeholder {
+      width: 100%; height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      cursor: pointer;
-      transition: background .15s ease, border-color .15s ease, transform .15s ease;
-      z-index: 2;
+      background: linear-gradient(135deg, #161616, #1e1e1e);
     }
 
-    #prevProject { left: -48px; }
-    #nextProject { right: -48px; }
+    .cat-thumb-placeholder svg { opacity: 0.2; }
 
-    .carousel-arrow:hover {
-      background: #1a2338;
-      border-color: #7faaff;
-      transform: translateY(-50%) scale(1.07);
+    .cat-thumb-blurred {
+      position: relative;
+      width: 100%; height: 100%;
+      overflow: hidden;
     }
 
-    .carousel-arrow svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--muted);
-      stroke-width: 2;
-      transition: stroke .15s ease;
+    .cat-thumb-blurred img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: blur(8px) brightness(0.5) saturate(0.7);
+      transform: scale(1.1);
     }
 
-    .carousel-arrow:hover svg { stroke: #e9ecf2; }
+    .cat-thumb-blurred-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      gap: 5px;
+    }
 
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
+    .cat-thumb-blurred-label svg { opacity: 0.5; }
+
+    .cat-info {
+      padding: 10px 12px;
+    }
+
+    .cat-title {
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .tier-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .tb-gold { background: rgba(245,197,24,0.12); color: var(--gold); }
+    .tb-diamond { background: rgba(91,196,232,0.12); color: var(--diamond); }
+    .tb-exclusive { background: rgba(184,127,255,0.12); color: var(--exclusive); }
+
+    .catalog-load-more {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    /* ─── TIERS ─── */
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 800px) {
+      .tiers-grid { grid-template-columns: 1fr; }
+    }
+
+    .tier-card {
+      background: var(--bg2);
       border: 1px solid var(--border);
-      padding: 14px;
-      width: 220px;
-      flex-shrink: 0;
-      cursor: pointer;
+      border-radius: 8px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .tier-card:hover { transform: translateY(-4px); }
 
+    .tier-card.diamond-card { border-color: rgba(91,196,232,0.3); background: linear-gradient(160deg, #0f1820, var(--bg2) 60%); }
+    .tier-card.diamond-card .tier-badge-header { color: var(--diamond); }
+
+    .tier-popular {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--diamond);
+      color: #000;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+
+    .tier-badge-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .tier-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .tier-price-dollar {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .tier-price-per {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .tier-name-full {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .tier-perks {
+      list-style: none;
       display: flex;
       flex-direction: column;
       gap: 10px;
-
-      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      margin-bottom: 28px;
+      flex: 1;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,204,77,0.45);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.55);
-    }
-
-    .card-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #1e293b;
-    }
-
-    .card-thumb.thumb-placeholder {
-      background: linear-gradient(135deg, #1a1f2e, #0f1320);
+    .tier-perks li {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.45;
     }
 
-    .card-thumb.thumb-placeholder::after {
-      content: "🎵";
-      font-size: 28px;
-      opacity: 0.4;
+    .tier-perks li::before {
+      content: '—';
+      color: var(--fl);
+      flex-shrink: 0;
+      font-weight: 700;
     }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-footer {
-      margin-top: auto;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .see-all-wrapper {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .btn-secondary {
-      padding: 10px 22px;
-      font-size: 14px;
-      color: var(--text);
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #0d111c;
-      cursor: pointer;
-      transition: background .15s, transform .15s;
-    }
-
-    .btn-secondary:hover {
-      background: #233162;
-      transform: translateY(-2px);
-    }
-
-    /* ---------------------------------------------------------
-       FOOTER
-    --------------------------------------------------------- */
-    footer {
+    .tier-btn {
+      display: block;
       text-align: center;
-      margin-top: 50px;
-      font-size: 12px;
-      color: var(--muted);
-      opacity: 0.8;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: opacity .15s, transform .1s;
+      cursor: pointer;
+      border: none;
+    }
+    .tier-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .gold-card .tier-badge-header { color: var(--gold); }
+    .gold-card .tier-btn { background: var(--gold); color: #000; }
+
+    .diamond-card .tier-btn { background: var(--diamond); color: #000; }
+
+    .exclusive-card .tier-badge-header { color: var(--exclusive); }
+    .exclusive-card .tier-btn { background: var(--exclusive); color: #000; }
+
+    /* ─── DIVIDER ─── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
     }
 
-    /* ---------------------------------------------------------
-       MODAL
-    --------------------------------------------------------- */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 1000;
-    }
-
-    .modal-backdrop.is-open { display: flex; }
-
-    .modal-dialog {
-      background: #0d111c;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      width: 100%;
-      max-width: 720px;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.75);
-    }
-
-    .modal-header {
-      padding: 16px 20px;
+    /* ─── CTA FINAL ─── */
+    .cta-band {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .cta-band h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 6vw, 72px);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+
+    .cta-band h2 span { color: var(--fl); }
+
+    .cta-band p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 24px 40px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .modal-title { font-size: 16px; font-weight: 700; }
-    .modal-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-    .modal-close-btn {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 8px;
-      transition: 0.15s;
-    }
-
-    .modal-close-btn:hover { background: rgba(255,255,255,0.06); }
-
-    .modal-search { padding: 10px 20px 0; }
-
-    .modal-search input {
-      width: 100%;
-      padding: 10px 14px;
-      background: #0f131d;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-      transition: 0.15s;
-    }
-
-    .modal-search input::placeholder { color: #6b7280; }
-
-    .modal-search input:focus {
-      border-color: #7faaff;
-      background: #151b2b;
-      box-shadow: 0 0 8px rgba(127,170,255,0.35);
-    }
-
-    /* ФИКСИРОВАННАЯ высота окна списка */
-    .modal-body {
-      padding-bottom: 12px;
-      height: 420px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      flex-shrink: 0;
-    }
-
-    .projects-list-header,
-    .projects-list-row {
-      display: grid;
-      /* чуть шире колонка Tier, чтобы Tier: Exclusive влезал */
-      grid-template-columns: 40px minmax(0, 1fr) 110px 80px;
-      padding: 10px 20px;
       align-items: center;
-    }
-
-    .projects-list-header {
+      flex-wrap: wrap;
+      gap: 10px;
       font-size: 12px;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
+      color: var(--muted2);
     }
 
-    .projects-list-row {
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      cursor: pointer;
-      transition: background 0.22s ease;
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.1em;
+      color: var(--fl);
     }
 
-    .projects-list-row:hover { background: rgba(30,55,115,0.45); }
-
-    .projects-list-index {
-      font-variant-numeric: tabular-nums;
-      color: var(--muted);
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
-    .projects-list-title {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .projects-list-tier {
-      color: var(--muted);
-      font-size: 13px;
-      justify-self: center;   /* центрируем текст tier в колонке */
-      text-align: center;
-    }
-
-    .projects-list-play-btn {
-      border: 1px solid var(--border);
-      background: #11131a;
-      color: #dce0e8;
-      padding: 5px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      justify-self: end;
-      cursor: pointer;
-      transition: background .2s, border .2s, transform .1s;
-    }
-
-    .projects-list-row:hover .projects-list-play-btn {
-      background: #1a2030;
-      border-color: #7faaff;
-      transform: translateY(-1px);
-    }
-
-    /* --- TIER FILTER HEADER + BUTTON --- */
-    .projects-list-tier-header {
-      display: flex;
-      align-items: center;
-      justify-content: center; /* центрируем кнопку внутри ячейки */
-      width: 100%;
-      justify-self: center;    /* и саму ячейку в колонке */
-    }
-
-    .tier-filter-btn {
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #10131e;
-      color: var(--muted);
-      font-size: 11px;
-      padding: 3px 8px;
-      cursor: pointer;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      white-space: nowrap;
-      transition: background .15s ease, border-color .15s ease, transform .1s ease;
-    }
-
-    .tier-filter-btn:hover {
-      background: #1a2030;
-      border-color: #7faaff;
-      transform: translateY(-1px);
-    }
-
-    /* --- SEARCH HIGHLIGHT --- */
-    .search-highlight {
-      background: rgba(255,204,77,0.35);
-      color: var(--text);
-      padding: 0 1px;
-      border-radius: 2px;
-    }
-
-    /* ---------------------------------------------------------
-       MOBILE POLISH
-    --------------------------------------------------------- */
-    @media (max-width: 600px) {
-      #prevProject { left: 6px; }
-      #nextProject { right: 6px; }
-      .carousel-arrow {
-        width: 32px;
-        height: 32px;
-        background: rgba(13,17,28,0.9);
-        backdrop-filter: blur(6px);
-      }
-    }
-
-    @media (max-width: 480px) { .card { width: 190px; } }
-    @media (max-width: 380px) { .card { width: 170px; } }
-
-    @media (max-width: 420px) {
-      .hero-title { font-size: 24px; }
-      .hero-project { font-size: 15px; }
-      .hero-sub { font-size: 14px; }
-
-      .projects-list-header,
-      .projects-list-row {
-        grid-template-columns: 32px minmax(0, 1fr) 70px;
-        padding: 8px 12px;
-      }
-      .projects-list-tier { display: none; }
-
-      .btn-primary {
-        font-size: 14px;
-        padding: 10px 18px;
-      }
+    /* ─── MOBILE ─── */
+    @media (max-width: 860px) {
+      .hero { flex-direction: column; padding: 80px 24px 48px; gap: 40px; }
+      .hero-right { max-width: 100%; width: 100%; }
+      .section { padding: 60px 20px; }
+      .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
     }
   </style>
-
-  <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-      (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-          m[i].l=1*new Date();
-          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105459376', 'ym');
-
-      ym(105459376, 'init', {
-        ssr:true,
-        webvisor:true,
-        clickmap:true,
-        ecommerce:"dataLayer",
-        accurateTrackBounce:true,
-        trackLinks:true
-      });
-  </script>
-  <noscript>
-    <div>
-      <img src="https://mc.yandex.ru/watch/105459376" style="position:absolute; left:-9999px;" alt=""/>
-    </div>
-  </noscript>
-  <!-- /Yandex.Metrika counter -->
-
 </head>
-
 <body>
 
-<div class="page">
+<!-- NAV -->
+<nav>
+  <div class="nav-dots">
+    <div class="nav-dot"></div>
+    <div class="nav-dot"></div>
+    <div class="nav-dot"></div>
+  </div>
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">PEREPONKA <span>BEATS</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('catalog')">Catalog</button>
+    <button class="nav-link" onclick="showPage('membership')">Membership</button>
+  </div>
+  <a class="nav-cta" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">Join Patreon</a>
+</nav>
 
-  <!-- HEADER -->
-  <header>
-    <div class="logo">PEREPONKA BEATS · FL STUDIO PROJECTS</div>
-  </header>
+<!-- ═══ HOME PAGE ═══ -->
+<div id="page-home" class="page active grid-bg">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <h1 class="hero-title" id="heroTitle">
-        Unlock all my FL Studio projects in one Patreon membership
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">FL Studio Project Library — Live</div>
+
+      <h1>
+        <span class="line1">LEARN</span>
+        <span class="line2">HIP-HOP</span>
+        <span class="line3">PRODUCTION</span>
       </h1>
 
-      <div class="hero-project" id="heroProject">
-        This exact FL Studio project instantly unlocks with your membership.
-      </div>
-
-      <p class="hero-sub" id="heroSubtitle">
-        Get the exact FL Studio remake you came for – plus access to a library of 1000+ projects, stems, and exclusive tutorial content.
+      <p class="hero-desc">
+        <strong>1470+ FL Studio remakes</strong> of the biggest hip-hop tracks — with full FLP files, WAV stems, and breakdowns. Open the project, see exactly how it's built.
       </p>
 
-      <ul class="hero-list">
-        <li>FLPs & stems from every YouTube video</li>
-        <li>Patreon-only tutorial videos</li>
-        <li>Direct access & real interaction with me</li>
-      </ul>
-
-      <a class="btn-primary"
-         href="https://www.patreon.com/pereponkabeats/membership"
-         target="_blank"
-         rel="noopener">
-        <span class="icon">🚀</span>
-        <span>Choose your membership</span>
-      </a>
-    </div>
-
-    <aside class="hero-media" id="highlightCard">
-      <div class="hero-media-video">
-        <a id="patreonLink" href="#" target="_blank" rel="noopener"
-           style="display:block;position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;text-decoration:none;">
-          <img id="thumbImg" src=""
-               style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:14px;"
-               alt="Project preview">
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);">
-            <div style="background:#ff424d;color:#fff;font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;display:flex;align-items:center;gap:8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.82 2.41C18.78 2.41 22 5.65 22 9.62c0 3.96-3.22 7.19-7.18 7.19H12v4.78L2 12l10-9.59v4.78h2.82z"/></svg>
-              Watch on Patreon
-            </div>
-          </div>
+      <div class="hero-btns">
+        <a class="btn-orange" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">
+          🔓 Join Patreon
         </a>
-        <div class="hero-media-meta" id="projectNote">
-          Click to watch this project on Patreon.
+        <button class="btn-ghost" onclick="showPage('catalog')">
+          Browse Catalog →
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">1470+</div>
+          <div class="hero-stat-label">FLP Projects</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">$5</div>
+          <div class="hero-stat-label">Starting from</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">146</div>
+          <div class="hero-stat-label">Members</div>
         </div>
       </div>
-    </aside>
-  </section>
-
-  <!-- POPULAR PROJECTS -->
-  <section class="section">
-    <div class="section-title-row">
-      <h2 class="section-title">Popular FLP projects</h2>
     </div>
 
-    <div class="projects-carousel">
-      <button class="carousel-arrow" id="prevProject" aria-label="Previous project">
-        <svg viewBox="0 0 24 24"><path d="M15 18L9 12l6-6"/></svg>
-      </button>
-
-      <div class="projects-viewport" id="projectsViewport">
-        <div class="projects-track" id="projectsTrack"></div>
-      </div>
-
-      <button class="carousel-arrow" id="nextProject" aria-label="Next project">
-        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-    </div>
-
-    <div class="see-all-wrapper">
-      <button type="button" class="btn-secondary" id="seeAllBtn">
-        See all projects
-      </button>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    This page is an overview only. All purchases and downloads happen securely on Patreon.
-  </footer>
-
-</div> <!-- /page -->
-
-<!-- MODAL HTML -->
-<div class="modal-backdrop" id="projectsModal" aria-hidden="true">
-  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectsModalTitle">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="projectsModalTitle">All projects in this library</div>
-        <div class="modal-sub">Click play to load any project into the main video above.</div>
-      </div>
-      <button type="button" class="modal-close-btn" id="projectsModalClose" aria-label="Close">×</button>
-    </div>
-
-    <div class="modal-search">
-      <input type="text" id="searchInput" placeholder="Search projects..." />
-    </div>
-
-    <div class="modal-body">
-      <div class="projects-list-header">
-        <div>#</div>
-        <div>Project title</div>
-        <div class="projects-list-tier-header">
-          <button type="button" class="tier-filter-btn" id="tierFilterBtn">
-            Tier: All
-          </button>
-        </div>
-      </div>
-
-      <div id="projectsList"></div>
+    <!-- FL Studio screenshot -->
+    <div class="hero-right">
+      <img src="main2_nobg.png" alt="FL Studio" style="width:100%;display:block;">
     </div>
   </div>
+
+  <!-- WHAT YOU GET -->
+  <section class="section">
+    <div class="section-header">
+      <div class="tag">// What's inside</div>
+      <h2 class="section-h2">EVERYTHING YOU NEED</h2>
+      <p class="section-sub">One membership. Full access to how the biggest beats in hip-hop were actually made.</p>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">🎛️</div>
+        <div class="feat-title">Full FL Studio Projects</div>
+        <div class="feat-desc">Every FLP is fully organized — mixer, patterns, automation, plugins. Open it and see every decision the producer made.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎚️</div>
+        <div class="feat-title">WAV Stems Included</div>
+        <div class="feat-desc">Separated stems — 808, drums, melody, pads, vocals. Use them in your own productions, no restrictions.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔥</div>
+        <div class="feat-title">Chart-Topping Remakes</div>
+        <div class="feat-desc">Travis Scott, Drake, The Weeknd, Juice WRLD, Kendrick Lamar — exact remakes of the biggest trap and hip-hop records.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📚</div>
+        <div class="feat-title">Learn by Deconstructing</div>
+        <div class="feat-desc">Reverse-engineer a professional project in minutes. No tutorial teaches you faster than opening the actual FLP.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Instant Access</div>
+        <div class="feat-desc">Join once, download immediately. No waiting. New projects added every month as new tracks drop.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">Direct Access to Me</div>
+        <div class="feat-desc">Exclusive tutorials, breakdowns, and live chat with me on higher tiers. Ask questions, request tracks.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- QUICK CATALOG PREVIEW -->
+  <section class="section" style="padding-top:0">
+    <div class="section-header">
+      <div class="tag">// Library preview</div>
+      <h2 class="section-h2">1470+ PROJECTS</h2>
+      <p class="section-sub">A few from the catalog. Browse the full library below.</p>
+    </div>
+    <div class="catalog-grid" id="homePreviewGrid"></div>
+    <div class="catalog-load-more" style="margin-top:28px;">
+      <button class="btn-ghost" onclick="showPage('catalog')">View Full Catalog →</button>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="section-header">
+      <div class="tag">// Community</div>
+      <h2 class="section-h2">WHAT PRODUCERS SAY</h2>
+    </div>
+
+    <div style="position:relative;">
+      <!-- arrows -->
+      <button id="revPrev" onclick="slideReviews(-1)" style="position:absolute;left:-18px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">‹</button>
+      <button id="revNext" onclick="slideReviews(1)"  style="position:absolute;right:-18px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">›</button>
+
+      <div id="reviewsTrack" style="overflow:hidden;">
+        <div id="reviewsInner" style="display:flex;transition:transform .4s cubic-bezier(.25,.46,.45,.94);">
+
+          <!-- Slide 1: reviews 1-3 -->
+          <div style="min-width:100%;box-sizing:border-box;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">Diamond tier worth every dollar. Got the Weeknd Blinding Lights FLP — every synth, every clip is there. Learned more in one session than 6 months of YouTube tutorials.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5bc4e8,#7dc438);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">M</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">MikeOnTheTrack</div>
+                    <div style="font-size:11px;color:#555;">Beatmaker · Atlanta</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Diamond</div>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">Bro the Kendrick FLP is insane. You can see exactly how the low end is mixed. Subscribed to Exclusive and never looked back — best investment I made as a producer.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#cc44ff,#ff4b2b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">J</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">JayProduces</div>
+                    <div style="font-size:11px;color:#555;">FL Studio · London</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Exclusive</div>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">1400+ projects for $15/month is literally insane value. I open 2-3 FLPs per week and study them. My beats have leveled up so much. The stems alone are worth the subscription.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#555,#999);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">K</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">KhalidBeats</div>
+                    <div style="font-size:11px;color:#555;">Producer · Dubai</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Diamond</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Slide 2: reviews 4-6 -->
+          <div style="min-width:100%;box-sizing:border-box;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">Opened the Travis Scott FLP and in one hour I understood how 808 sidechaining actually works. Better than any tutorial. Already using the patterns in my own sessions.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff8c00,#ff4b2b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">D</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Damir_Beatz</div>
+                    <div style="font-size:11px;color:#555;">Producer · Almaty</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Gold</div>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">New projects drop every month and I look forward to it like a new episode. Been Exclusive for 6 months. Ravshan answers questions personally — that alone is worth the price.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff8c00,#ffcc00);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">S</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Sarvar_Music</div>
+                    <div style="font-size:11px;color:#555;">Exclusive · Moscow</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Exclusive</div>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg,#111 0%,#141414 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;user-select:none;">"</div>
+                <div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div>
+                <p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;position:relative;flex:1;">Gold tier for $5 is a steal. Grabbed the Drake Gods Plan FLP, broke down the entire melody. Now I build similar chord progressions in every session. Game changer.</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#f5a623,#7dc438);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">A</div>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Amir_FL</div>
+                    <div style="font-size:11px;color:#555;">Producer · Tashkent</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0;">Gold</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- dots -->
+      <div id="revDots" style="display:flex;justify-content:center;gap:6px;margin-top:20px;"></div>
+    </div>
+  </section>
+  <script>
+    (function(){
+      var idx = 0;
+      var total = 2;
+      function updateDots() {
+        var dots = document.getElementById('revDots');
+        dots.innerHTML = '';
+        for (var i = 0; i < total; i++) {
+          var d = document.createElement('div');
+          d.style.cssText = 'width:' + (i===idx?'20px':'6px') + ';height:6px;border-radius:3px;background:' + (i===idx?'#ff8c00':'#2a2a2a') + ';transition:all .3s;cursor:pointer;';
+          (function(ii){ d.onclick = function(){ idx=ii; updateSlide(); }; })(i);
+          dots.appendChild(d);
+        }
+      }
+      function updateSlide() {
+        document.getElementById('reviewsInner').style.transform = 'translateX(-' + (idx * 100) + '%)';
+        updateDots();
+      }
+      window.slideReviews = function(dir) {
+        idx = (idx + dir + total) % total;
+        updateSlide();
+      };
+      updateDots();
+    })();
+  </script>
+
 </div>
 
-<!-- JAVASCRIPT -->
+<!-- ═══ CATALOG PAGE ═══ -->
+<div id="page-catalog" class="page" style="padding-top:52px;">
+  <section class="section">
+    <div class="section-header">
+      <div class="tag">// Project Library</div>
+      <h2 class="section-h2">FULL CATALOG</h2>
+      <p class="section-sub">Search 1470+ FL Studio remakes. Click any project to open on Patreon.</p>
+    </div>
+
+    <div class="catalog-controls">
+      <input class="search-box" type="text" id="searchInput" placeholder="Search by artist or track name..." oninput="onSearchInput()">
+      <div class="filter-btns">
+        <button class="filter-btn active" data-tier="all" onclick="setTier('all', this)">All</button>
+        <button class="filter-btn gold" data-tier="Gold" onclick="setTier('Gold', this)">Gold</button>
+        <button class="filter-btn diamond" data-tier="Diamond" onclick="setTier('Diamond', this)">Diamond</button>
+        <button class="filter-btn exclusive" data-tier="Exclusive" onclick="setTier('Exclusive', this)">Exclusive</button>
+      </div>
+    </div>
+
+    <div id="artistTags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
+      <span style="font-size:11px;color:#555;align-self:center;letter-spacing:0.05em;text-transform:uppercase;margin-right:4px;">Popular:</span>
+      <button class="artist-tag" onclick="searchArtist(this,'Drake')">Drake</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Travis Scott')">Travis Scott</button>
+      <button class="artist-tag" onclick="searchArtist(this,'The Weeknd')">The Weeknd</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Kendrick Lamar')">Kendrick Lamar</button>
+      <button class="artist-tag" onclick="searchArtist(this,'21 Savage')">21 Savage</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Juice WRLD')">Juice WRLD</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Post Malone')">Post Malone</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Future')">Future</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Lil Baby')">Lil Baby</button>
+      <button class="artist-tag" onclick="searchArtist(this,'Eminem')">Eminem</button>
+    </div>
+
+    <div class="catalog-count" id="catalogCount">Loading...</div>
+    <div class="catalog-grid" id="catalogGrid"></div>
+    <div class="catalog-load-more" id="loadMoreWrap" style="display:none;">
+      <button class="btn-ghost" onclick="loadMore()">Load More</button>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ MEMBERSHIP PAGE ═══ -->
+<div id="page-membership" class="page" style="padding-top:52px;">
+  <section class="section">
+    <div class="section-header">
+      <div class="tag">// Membership</div>
+      <h2 class="section-h2">CHOOSE YOUR TIER</h2>
+      <p class="section-sub">All tiers give instant access to the library. Upgrade anytime.</p>
+    </div>
+
+    <div class="tiers-grid">
+      <!-- GOLD -->
+      <div class="tier-card gold-card">
+        <div class="tier-badge-header">Gold</div>
+        <div class="tier-price-row">
+          <div class="tier-price-dollar">$5</div>
+          <div class="tier-price-per">/ month</div>
+        </div>
+        <div class="tier-name-full">FLP Academy (Gold)</div>
+        <ul class="tier-perks">
+          <li>Access to 50 latest FLP projects</li>
+          <li>Access to 50 latest WAV stems</li>
+          <li>Shout-out in YouTube videos</li>
+        </ul>
+        <a class="tier-btn" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">Join Gold — $5/mo</a>
+      </div>
+
+      <!-- DIAMOND -->
+      <div class="tier-card diamond-card">
+        <div class="tier-popular">Most Popular</div>
+        <div class="tier-badge-header">Diamond</div>
+        <div class="tier-price-row">
+          <div class="tier-price-dollar">$15</div>
+          <div class="tier-price-per">/ month</div>
+        </div>
+        <div class="tier-name-full">FLP Academy (Diamond)</div>
+        <ul class="tier-perks">
+          <li>Access to 500 latest FLP projects</li>
+          <li>Access to 500 latest WAV stems</li>
+          <li>Shout-out in YouTube videos</li>
+        </ul>
+        <a class="tier-btn" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">Join Diamond — $15/mo</a>
+      </div>
+
+      <!-- EXCLUSIVE -->
+      <div class="tier-card exclusive-card">
+        <div class="tier-badge-header">Exclusive</div>
+        <div class="tier-price-row">
+          <div class="tier-price-dollar">$25</div>
+          <div class="tier-price-per">/ month</div>
+        </div>
+        <div class="tier-name-full">FLP Academy (Exclusive)</div>
+        <ul class="tier-perks">
+          <li>Access to ALL FLP projects (1000+)</li>
+          <li>Access to ALL WAV stems (1000+)</li>
+          <li>Shout-out in YouTube videos</li>
+          <li>Exclusive video tutorials & breakdowns</li>
+          <li>Priority live chat with me</li>
+        </ul>
+        <a class="tier-btn" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener">Join Exclusive — $25/mo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="section" style="padding-top:0;">
+    <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="feat">
+        <div class="feat-icon">🏆</div>
+        <div class="feat-title">Why Patreon?</div>
+        <div class="feat-desc">Secure payments, instant access, cancel anytime. Your files stay downloadable as long as you're a member.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📦</div>
+        <div class="feat-title">New drops monthly</div>
+        <div class="feat-desc">Fresh FLPs added every month as new tracks release. Always up to date with what's hot in hip-hop.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">Start at any tier</div>
+        <div class="feat-desc">Begin with Gold at $5/mo to test the library. Upgrade to Diamond or Exclusive whenever you're ready.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CTA BAND (shown on home only via JS) -->
+<div class="cta-band" id="ctaBand">
+  <h2>STOP WATCHING.<br><span>START BUILDING.</span></h2>
+  <p>Join 146 producers who already have access to the full library.</p>
+  <a class="btn-orange" href="https://www.patreon.com/pereponkabeats/membership" target="_blank" rel="noopener" style="font-size:16px; padding:14px 32px;">
+    🔓 Unlock the Full Library
+  </a>
+</div>
+
+<footer>
+  <div class="footer-logo">PEREPONKA BEATS</div>
+  <div>All purchases happen securely on Patreon.</div>
+  <a href="https://www.patreon.com/pereponkabeats" target="_blank" rel="noopener" style="color: var(--fl); text-decoration:none; font-weight:600;">patreon.com/pereponkabeats →</a>
+</footer>
+
 <script>
-let ALL_PROJECTS = [];
-let PROJECTS = [];
+// ─── DATA ───
+let ALL = [];
+let filtered = [];
+let currentTier = 'all';
+let displayCount = 50;
 
-let loopProjects = [];
-let loopOffset = 0;
-let carouselIndex = 0;
-let cardStep = 260;
+// ─── PAGE NAV ───
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('ctaBand').style.display = name === 'home' ? 'block' : 'none';
 
-// --- фильтр по tier ---
-// Логика:
-// All       – все проекты
-// Gold      – только Gold
-// Diamond   – Gold + Diamond
-// Exclusive – Gold + Diamond + Exclusive
-let TIER_FILTER_OPTIONS = ["all", "Gold", "Diamond", "Exclusive"];
-let currentTierFilter = "all";
-let currentTierFilterIndex = 0;
+  const navBtns = document.querySelectorAll('.nav-link');
+  const map = { home: 0, catalog: 1, membership: 2 };
+  if (navBtns[map[name]]) navBtns[map[name]].classList.add('active');
 
-const urlParams = new URLSearchParams(window.location.search);
-const highlightedVideoId = urlParams.get("project");
-const fromYouTube = urlParams.get("utm_source") === "youtube";
+  window.scrollTo(0, 0);
 
-/* CSV PARSER */
-function parseCSVLine(line) {
-  const result = [];
-  let current = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (ch === ',' && !inQuotes) {
-      result.push(current);
-      current = "";
-    } else {
-      current += ch;
-    }
+  // Re-observe after page becomes visible
+  if (name === 'catalog') {
+    const grid = document.getElementById('catalogGrid');
+    if (grid) observeCards(grid);
   }
-  result.push(current);
+  if (name === 'home') {
+    const grid = document.getElementById('homePreviewGrid');
+    if (grid) observeCards(grid);
+  }
+}
+
+// ─── PIANO ROLL NOTES ───
+function buildPianoRoll() {
+  const roll = document.getElementById('pianoRoll');
+  if (!roll) return;
+  const notes = [
+    [0,3,12],[5,2,12],[8,4,12],[13,1,12],[15,3,8],[19,5,12],
+    [22,2,12],[25,4,8],[28,6,12],[32,1,12],[35,3,12],[38,5,8],
+    [42,2,12],[45,4,12],[48,6,8],[52,1,12],[55,3,12],
+  ];
+  const rollW = 520;
+  const noteH = 180 / 16;
+  notes.forEach(([x, row, w]) => {
+    const el = document.createElement('div');
+    el.className = 'fl-note';
+    el.style.left = (x / 64 * 100) + '%';
+    el.style.top = (row * noteH) + 'px';
+    el.style.width = (w / 64 * 100) + '%';
+    roll.appendChild(el);
+  });
+}
+
+// ─── WAVEFORM ───
+function buildWaveform() {
+  const bars = document.getElementById('waveformBars');
+  if (!bars) return;
+  const heights = [4,8,14,20,28,18,10,6,18,30,22,12,8,24,32,18,10,6,14,22,16,8,20,28,12,6,18,26,14,8];
+  heights.forEach(h => {
+    const bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    bar.style.height = h + 'px';
+    bars.appendChild(bar);
+  });
+}
+
+// ─── CSV PARSER ───
+function parseCSVLine(line) {
+  const result = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { if (inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += c;
+  }
+  result.push(cur);
   return result;
 }
 
-function parseCSV(text) {
-  const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
-  if (!lines.length) return [];
-  const headers = parseCSVLine(lines[0]);
-  return lines.slice(1).map(line => {
-    const values = parseCSVLine(line);
-    const entry = {};
-    headers.forEach((h, i) => entry[h.trim()] = values[i] || "");
-    return entry;
-  });
-}
-
-/* LOAD CSV */
-async function loadProjectsFromCSV() {
+// ─── LOAD CSV ───
+async function loadCSV() {
   try {
-    const res = await fetch("youtube_videos.csv", { cache: "no-store" });
+    const res = await fetch('youtube_videos.csv', { cache: 'no-store' });
     if (!res.ok) return;
+    const text = await res.text();
+    const lines = text.split('\n').filter(l => l.trim());
+    const headers = parseCSVLine(lines[0]).map(h => h.trim().replace(/^"|"$/g,''));
+    ALL = lines.slice(1).map(line => {
+      const vals = parseCSVLine(line);
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,'').trim());
+      return obj;
+    }).filter(r => r.patreon_id && r.patreon_id !== '');
 
-    const csv = await res.text();
-    const rows = parseCSV(csv);
-
-    ALL_PROJECTS = rows
-      .filter(r => r.patreon_id && r.patreon_id.trim() !== "")
-      .map(r => {
-        const patreonId = r.patreon_id.trim();
-        const videoId = (r.video_id || "").trim();
-        const topNum = parseInt((r.top || "").trim(), 10);
-        return {
-          videoId: patreonId,
-          patreonId: patreonId,
-          displayTitle: (r.title || "Untitled project").trim(),
-          tier: (r.tier || "Gold").trim(),
-          top: Number.isFinite(topNum) ? topNum : 0,
-          thumb: (r.thumb_url || "").trim()
-        };
-      });
-
-    const popular = ALL_PROJECTS
-      .filter(p => p.top > 0 && p.thumb)
-      .sort((a, b) => a.top - b.top);
-
-    PROJECTS = popular.length ? popular : ALL_PROJECTS.filter(p => p.thumb).slice(0, 10);
-
-  } catch (e) {
-    console.error("Failed to load youtube_videos.csv", e);
+  } catch(e) {
+    console.warn('CSV load failed', e);
   }
+  renderHomePreview();
+  filterCatalog();
 }
 
-/* HERO */
-function renderHeroData(project) {
-  const title = document.getElementById("heroTitle");
-  const projectLine = document.getElementById("heroProject");
-  const subtitle = document.getElementById("heroSubtitle");
-  const note = document.getElementById("projectNote");
+// ─── ITUNES ARTWORK ───
+const itunesCache = new Map();
 
-  if (!project) {
-    title.textContent = "Unlock all my FL Studio projects in one Patreon membership";
-    projectLine.textContent = "Project from this YouTube video will be inside your membership.";
-    subtitle.textContent = "Get access to 1000+ remakes, stems and exclusive tutorials.";
-    note.textContent = "Choose a project from the carousel or list to preview it.";
-    return;
+function parseTitle(raw) {
+  // "Artist - Track ft. X | FLP + Stems" → { artist, track }
+  const clean = raw
+    .replace(/\|.*$/i, '')
+    .replace(/\+\s*(FLP|stems?|wav).*/gi, '')
+    .replace(/\(instrumental\)/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const dash = clean.indexOf(' - ');
+  if (dash === -1) return { artist: clean, track: '' };
+  const artist = clean.slice(0, dash).trim();
+  const track = clean.slice(dash + 3)
+    .replace(/\s*ft\..*$/i, '')
+    .replace(/\s*feat\..*$/i, '')
+    .trim();
+  return { artist, track };
+}
+
+function genreQuery(title) {
+  const t = title.toLowerCase();
+  if (t.includes('lofi') || t.includes('lo-fi')) return 'lofi hip hop';
+  if (t.includes('drill')) return 'uk drill rap';
+  if (t.includes('r&b') || t.includes('rnb')) return 'rnb soul';
+  if (t.includes('type beat')) return 'hip hop trap instrumental';
+  return 'hip hop trap';
+}
+
+async function fetchItunes(query) {
+  if (itunesCache.has(query)) return itunesCache.get(query);
+  try {
+    const url = `https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=1`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const art = data.data?.[0]?.album?.cover_xl || null;
+    itunesCache.set(query, art);
+    return art;
+  } catch { return null; }
+}
+
+async function getArtwork(title, localPath) {
+  // 1. Local pre-downloaded artwork
+  if (localPath) return localPath;
+  const { artist, track } = parseTitle(title);
+  // 2. Exact: artist + track
+  if (track) {
+    const art = await fetchItunes(`${artist} ${track}`);
+    if (art) return art;
   }
-
-  title.textContent = "Get access to 1000+ FLPs";
-  projectLine.textContent = "by joining my Patreon";
-  subtitle.textContent = "This FL Studio project will be included in your Patreon membership.";
-  note.innerHTML = `Included in: <strong>${project.tier}</strong> tier and above`;
+  // 3. Artist only
+  const art2 = await fetchItunes(artist);
+  return art2 || null;
 }
 
-function setVideo(project, fallback = null, autoplay = false) {
-  const link = document.getElementById("patreonLink");
-  const thumb = document.getElementById("thumbImg");
-  if (!link || !thumb || !project) return;
-
-  link.href = `https://www.patreon.com/posts/${project.patreonId}`;
-  thumb.src = project.thumb;
+function setCardArt(thumb, result) {
+  if (!thumb || !result) return;
+  const url = typeof result === 'string' ? result : result.url;
+  const filter = (result && result.blur) ? 'filter:blur(8px) brightness(0.5) saturate(0.6);transform:scale(1.1);' : '';
+  thumb.innerHTML = `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;${filter}">`;
 }
 
-function highlightVideo(project, autoplay = false) {
-  renderHeroData(project);
-  setVideo(project, null, autoplay);
-
-  if (project) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("project", project.videoId);
-    window.history.replaceState({}, "", url.toString());
-  }
+function shimmerHTML() {
+  return `<div style="width:100%;height:100%;background:linear-gradient(90deg,#1a1a1a 25%,#242424 50%,#1a1a1a 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;"></div>`;
 }
 
-/* CAROUSEL */
-function buildCarousel() {
-  const track = document.getElementById("projectsTrack");
-  if (!track || !PROJECTS.length) return;
+// ─── CARD HTML ───
+function cardHTML(p) {
+  const href = p.patreon_id ? `https://www.patreon.com/posts/${p.patreon_id}` : 'https://www.patreon.com/pereponkabeats';
+  const safeTitle = p.title.replace(/"/g, '&quot;');
+  const safeArt = (p.artwork || '').replace(/"/g, '&quot;');
 
-  track.innerHTML = "";
+  const tierStyle = {
+    Gold:      'background:#f5a623;color:#000;',
+    Diamond:   'background:#5bc4e8;color:#000;',
+    Exclusive: 'background:#ff8c00;color:#000;',
+  }[p.tier] || 'background:#f5a623;color:#000;';
 
-  const clonesBefore = PROJECTS.slice(-3);
-  const clonesAfter = PROJECTS.slice(0, 3);
+  const parts = p.title.split(' - ');
+  const artist = (parts[0] || '').trim();
+  const track  = (parts[1] || p.title).trim().replace(/\s*\|.*$/, '').replace(/\s*\+\s*(FLP|stems?).*/i, '');
 
-  loopProjects = [...clonesBefore, ...PROJECTS, ...clonesAfter];
-  loopOffset = clonesBefore.length;
+  const tierDot = { Gold: '#f5a623', Diamond: '#5bc4e8', Exclusive: '#ff4b2b' }[p.tier] || '#f5a623';
 
-  loopProjects.forEach(project => {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="card-thumb">
-        <img src="${project.thumb || ''}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentNode.classList.add('thumb-placeholder')">
+  return `
+    <a class="cat-card" href="${href}" target="_blank" rel="noopener" data-title="${safeTitle}" data-art="${safeArt}">
+      <div class="cat-thumb">${shimmerHTML()}</div>
+      <div style="padding:10px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div style="min-width:0;">
+          <div style="font-size:11px;color:#888;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.05em;">${artist}</div>
+          <div style="font-size:13px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${p.title}">${track}</div>
+        </div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${tierDot};flex-shrink:0;margin-top:4px;" title="${p.tier}"></div>
       </div>
-      <div class="card-title">${project.displayTitle}</div>
-      <div class="card-footer">
-        Included in: <strong>${project.tier}</strong> tier
-      </div>
-    `;
-
-    card.addEventListener("click", () => {
-      ym(105459376, "reachGoal", "project_open", {
-        project_id: project.videoId,
-        project_title: project.displayTitle,
-        tier: project.tier
-      });
-
-        highlightVideo(project, true);
-    });
-
-    track.appendChild(card);
-  });
-
-  const first = track.querySelector(".card");
-  if (first) cardStep = first.offsetWidth + 16;
-
-  carouselIndex = loopOffset;
-  updateCarousel(true);
+    </a>`;
 }
 
-function updateCarousel(jump = false, extraPx = 0) {
-  const track = document.getElementById("projectsTrack");
-  if (!track) return;
-  track.style.transition = jump ? "none" : "transform .28s ease";
-  track.style.transform = `translateX(${-(carouselIndex * cardStep) + extraPx}px)`;
-}
+// ─── INTERSECTION OBSERVER FOR LAZY ARTWORK ───
+let artObserver;
+function observeCards(grid) {
+  if (artObserver) artObserver.disconnect();
+  artObserver = new IntersectionObserver((entries) => {
+    const visible = entries.filter(e => e.isIntersecting);
+    if (!visible.length) return;
+    visible.forEach(e => artObserver.unobserve(e.target));
 
-function setupCarouselControls() {
-  const prev = document.getElementById("prevProject");
-  const next = document.getElementById("nextProject");
-  if (!prev || !next || !loopProjects.length) return;
-
-  window._goNext = () => {
-    carouselIndex++;
-    updateCarousel();
-    if (carouselIndex >= loopProjects.length - loopOffset) {
-      setTimeout(() => {
-        carouselIndex = loopOffset;
-        updateCarousel(true);
-      }, 300);
-    }
-  };
-
-  window._goPrev = () => {
-    carouselIndex--;
-    updateCarousel();
-    if (carouselIndex < loopOffset) {
-      setTimeout(() => {
-        carouselIndex = loopProjects.length - loopOffset - 1;
-        updateCarousel(true);
-      }, 300);
-    }
-  };
-
-  next.onclick = window._goNext;
-  prev.onclick = window._goPrev;
-}
-
-/* SWIPE ONLY ON TOUCH DEVICES */
-function setupCarouselSwipeTouchOnly() {
-  const isTouchDevice =
-    window.matchMedia("(pointer: coarse)").matches ||
-    window.matchMedia("(hover: none)").matches;
-
-  if (!isTouchDevice) return;
-
-  const viewport = document.getElementById("projectsViewport");
-  const track = document.getElementById("projectsTrack");
-  if (!viewport || !track || !loopProjects.length) return;
-
-  let isDown = false;
-  let startX = 0;
-  let startY = 0;
-  let dx = 0;
-  let didMove = false;
-
-  const THRESHOLD = 60;
-
-  function onStart(clientX, clientY) {
-    isDown = true;
-    didMove = false;
-    dx = 0;
-    startX = clientX;
-    startY = clientY;
-    track.style.transition = "none";
-  }
-
-  function onMove(clientX, clientY, e) {
-    if (!isDown) return;
-
-    const curDx = clientX - startX;
-    const curDy = clientY - startY;
-
-    if (Math.abs(curDy) > Math.abs(curDx)) return;
-
-    didMove = true;
-    dx = curDx;
-    e.preventDefault();
-
-    updateCarousel(true, dx);
-  }
-
-  function onEnd() {
-    if (!isDown) return;
-    isDown = false;
-    track.style.transition = "";
-
-    if (!didMove) {
-      updateCarousel();
-      return;
-    }
-
-    if (dx <= -THRESHOLD) {
-      window._goNext && window._goNext();
-    } else if (dx >= THRESHOLD) {
-      window._goPrev && window._goPrev();
-    } else {
-      updateCarousel();
-    }
-  }
-
-  viewport.addEventListener("touchstart", (e) => {
-    const t = e.touches[0];
-    onStart(t.clientX, t.clientY);
-  }, { passive: true });
-
-  viewport.addEventListener("touchmove", (e) => {
-    const t = e.touches[0];
-    onMove(t.clientX, t.clientY, e);
-  }, { passive: false });
-
-  viewport.addEventListener("touchend", onEnd, { passive: true });
-  viewport.addEventListener("touchcancel", onEnd, { passive: true });
-}
-
-/* MODAL OPEN/CLOSE */
-function openModal() {
-  const modal = document.getElementById("projectsModal");
-  if (!modal) return;
-  modal.classList.add("is-open");
-  modal.setAttribute("aria-hidden", "false");
-}
-
-function closeModal() {
-  const modal = document.getElementById("projectsModal");
-  if (!modal) return;
-  modal.classList.remove("is-open");
-  modal.setAttribute("aria-hidden", "true");
-}
-
-/* UTILS: ESCAPE + HIGHLIGHT */
-function escapeHtml(str) {
-  return String(str ?? "").replace(/[&<>"']/g, function(ch) {
-    switch (ch) {
-      case "&": return "&amp;";
-      case "<": return "&lt;";
-      case ">": return "&gt;";
-      case '"': return "&quot;";
-      case "'": return "&#39;";
-      default: return ch;
-    }
-  });
-}
-
-function highlightText(text, query) {
-  const safeText = escapeHtml(text);
-  if (!query) return safeText;
-
-  const q = String(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  if (!q) return safeText;
-
-  const re = new RegExp(q, "ig");
-  return safeText.replace(re, (match) => `<span class="search-highlight">${match}</span>`);
-}
-
-/* TIER FILTER LOGIC */
-function matchesTierFilter(project) {
-  const t = project.tier;
-  switch (currentTierFilter) {
-    case "all":
-      return true;
-    case "Gold":
-      return t === "Gold";
-    case "Diamond":
-      return t === "Gold" || t === "Diamond";
-    case "Exclusive":
-      return t === "Gold" || t === "Diamond" || t === "Exclusive";
-    default:
-      return true;
-  }
-}
-
-/* FILL MODAL LIST */
-function fillModal() {
-  const list = document.getElementById("projectsList");
-  const searchInput = document.getElementById("searchInput");
-  const rawSearch = searchInput ? searchInput.value : "";
-  const searchValue = rawSearch.toLowerCase();
-
-  if (!list) return;
-  list.innerHTML = "";
-
-  ALL_PROJECTS
-    .filter(p => {
-      if (!searchValue) return true;
-      const title = (p.displayTitle || "").toLowerCase();
-      const tierText = (p.tier || "").toLowerCase();
-      return title.includes(searchValue) || tierText.includes(searchValue);
-    })
-    .filter(p => matchesTierFilter(p))
-    .forEach((p, i) => {
-      const row = document.createElement("div");
-      row.className = "projects-list-row";
-
-      const highlightedTitle = highlightText(p.displayTitle || "", rawSearch);
-      const highlightedTier = highlightText(p.tier || "", rawSearch);
-
-      row.innerHTML = `
-        <div class="projects-list-index">${i + 1}</div>
-        <div class="projects-list-title" title="${escapeHtml(p.displayTitle || "")}">${highlightedTitle}</div>
-        <div class="projects-list-tier">${highlightedTier}</div>
-        <button class="projects-list-play-btn">
-          <span>▶</span> Play
-        </button>
-      `;
-
-      const play = row.querySelector(".projects-list-play-btn");
-
-      function playProject() {
-        highlightVideo(p, true);
-        closeModal();
+    // Fire all visible cards in parallel
+    Promise.all(visible.map(async (entry) => {
+      const card = entry.target;
+      const title = card.dataset.title || '';
+      const localPath = card.dataset.art || '';
+      const thumb = card.querySelector('.cat-thumb');
+      const result = await getArtwork(title, localPath);
+      if (result) {
+        setCardArt(thumb, result);
+      } else {
+        const [c1, c2] = titleGradient(title);
+        thumb.innerHTML = `<div style="width:100%;height:100%;background:linear-gradient(135deg,${c1},${c2});"></div>`;
       }
+    }));
+  }, { rootMargin: '300px' });
 
-      play.addEventListener("click", e => { e.stopPropagation(); playProject(); });
-      row.addEventListener("click", playProject);
-
-      list.appendChild(row);
-    });
+  grid.querySelectorAll('.cat-card').forEach(c => artObserver.observe(c));
 }
 
-/* MODAL SETUP */
-function setupModal() {
-  const openBtn = document.getElementById("seeAllBtn");
-  const modal = document.getElementById("projectsModal");
-  const closeBtn = document.getElementById("projectsModalClose");
-  if (!openBtn || !modal || !closeBtn) return;
-
-  openBtn.addEventListener("click", openModal);
-  closeBtn.addEventListener("click", closeModal);
-
-  modal.addEventListener("click", e => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeModal();
-  });
-
-  const searchInput = document.getElementById("searchInput");
-  if (searchInput) searchInput.addEventListener("input", fillModal);
-}
-
-/* TIER FILTER SETUP + TOOLTIP */
-function setupTierFilter() {
-  const btn = document.getElementById("tierFilterBtn");
-  if (!btn || !TIER_FILTER_OPTIONS.length) return;
-
-  function updateBtnLabelAndTooltip() {
-    let label = "All";
-    let tooltip = "Showing all projects.";
-
-    switch (currentTierFilter) {
-      case "all":
-        label = "All";
-        tooltip = "Showing all projects.";
-        break;
-      case "Gold":
-        label = "Gold";
-        tooltip = "Showing: Gold projects only.";
-        break;
-      case "Diamond":
-        label = "Diamond";
-        tooltip = "Showing: all projects available on Diamond (Gold + Diamond).";
-        break;
-      case "Exclusive":
-        label = "Exclusive";
-        tooltip = "Showing: all projects available on Exclusive (Gold + Diamond + Exclusive).";
-        break;
+// ─── HOME PREVIEW ───
+async function renderHomePreview() {
+  const grid = document.getElementById('homePreviewGrid');
+  if (!grid) return;
+  const top = ALL.filter(p => parseInt(p.top) > 0 && p.artwork)
+    .sort((a,b) => parseInt(a.top) - parseInt(b.top))
+    .slice(0, 10);
+  const fallback = ALL.filter(p => p.artwork).slice(0, 10);
+  const items = top.length ? top : fallback;
+  grid.innerHTML = items.map(p => cardHTML(p)).join('');
+  // Load images directly (no observer) — only 10 cards
+  await Promise.all(items.map(async (p, i) => {
+    const card = grid.querySelectorAll('.cat-card')[i];
+    if (!card) return;
+    const thumb = card.querySelector('.cat-thumb');
+    const result = await getArtwork(p.title, p.artwork);
+    if (result) {
+      setCardArt(thumb, result);
+    } else {
+      const [c1, c2] = titleGradient(p.title);
+      thumb.innerHTML = `<div style="width:100%;height:100%;background:linear-gradient(135deg,${c1},${c2});"></div>`;
     }
-
-    btn.textContent = `Tier: ${label}`;
-    btn.title = tooltip;
-  }
-
-  btn.addEventListener("click", () => {
-    currentTierFilterIndex = (currentTierFilterIndex + 1) % TIER_FILTER_OPTIONS.length;
-    currentTierFilter = TIER_FILTER_OPTIONS[currentTierFilterIndex];
-
-    updateBtnLabelAndTooltip();
-    fillModal();
-
-    if (typeof ym === "function") {
-      ym(105459376, "reachGoal", "tier_filter_change", {
-        tier: currentTierFilter
-      });
-    }
-  });
-
-  updateBtnLabelAndTooltip();
+  }));
 }
 
-let titleWasSet = false;
+// ─── CATALOG FILTER ───
+let activeArtistTag = null;
 
-function setInitialPageTitle(project) {
-  if (titleWasSet) return;
-  titleWasSet = true;
-
-  const base = "Pereponka Beats";
-  if (!project) {
-    document.title = `${base} — FL Studio Projects Library`;
-    return;
-  }
-
-  document.title = `${base} — ${project.displayTitle}`;
-}
-
-/* INIT */
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadProjectsFromCSV();
-
-  if (ALL_PROJECTS.length) {
-    buildCarousel();
-    setupCarouselControls();
-    setupCarouselSwipeTouchOnly();
-    setupModal();
-    setupTierFilter();
-    fillModal();
-  }
-
-  let match = null;
-  if (highlightedVideoId) {
-    match = ALL_PROJECTS.find(p => p.videoId === highlightedVideoId) || null;
-  }
-
-  if (match) {
-    setInitialPageTitle(match);
-    highlightVideo(match, fromYouTube);
-  } else if (PROJECTS.length) {
-    setInitialPageTitle(PROJECTS[0]);
-    highlightVideo(PROJECTS[0], false);
+function searchArtist(btn, artist) {
+  const input = document.getElementById('searchInput');
+  if (activeArtistTag === artist) {
+    // deselect
+    activeArtistTag = null;
+    input.value = '';
+    btn.classList.remove('active');
   } else {
-    setInitialPageTitle(null);
-    renderHeroData(null);
+    // deselect previous
+    document.querySelectorAll('.artist-tag').forEach(b => b.classList.remove('active'));
+    activeArtistTag = artist;
+    input.value = artist;
+    btn.classList.add('active');
   }
-});
-</script>
+  filterCatalog();
+}
 
+function onSearchInput() {
+  // if user types manually, deselect artist tag
+  document.querySelectorAll('.artist-tag').forEach(b => b.classList.remove('active'));
+  activeArtistTag = null;
+  filterCatalog();
+}
+
+function filterCatalog() {
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  filtered = ALL.filter(p => {
+    const matchTier = currentTier === 'all' || p.tier === currentTier;
+    const matchQ = !q || p.title.toLowerCase().includes(q);
+    return matchTier && matchQ;
+  });
+  displayCount = 50;
+  renderCatalog();
+}
+
+function setTier(tier, btn) {
+  currentTier = tier;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCatalog();
+}
+
+function loadMore() {
+  displayCount += 50;
+  renderCatalog();
+}
+
+function renderCatalog() {
+  const grid = document.getElementById('catalogGrid');
+  const count = document.getElementById('catalogCount');
+  const moreWrap = document.getElementById('loadMoreWrap');
+  if (!grid) return;
+
+  const visible = filtered.slice(0, displayCount);
+  grid.innerHTML = visible.map(p => cardHTML(p)).join('');
+  observeCards(grid);
+
+  if (count) count.textContent = `${filtered.length} projects`;
+  if (moreWrap) moreWrap.style.display = filtered.length > displayCount ? 'block' : 'none';
+}
+
+// ─── INIT ───
+buildPianoRoll();
+buildWaveform();
+showPage('home');
+loadCSV();
+</script>
 </body>
 </html>
