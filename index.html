@@ -821,6 +821,9 @@
       100% { background-position: -200% 0; }
     }
 
+    .mobile-only { display: none; }
+    .desktop-only { display: block; }
+
     /* ─── HAMBURGER ─── */
     .nav-hamburger {
       display: none;
@@ -868,6 +871,9 @@
       .hero { flex-direction: column; padding: 80px 20px 48px; gap: 32px; }
       .hero-right { max-width: 100%; width: 100%; }
       .hero { min-height: unset; }
+      .hero-img-desktop { display: none; }
+      .mobile-only { display: block; }
+      .desktop-only { display: none; }
       .hero h1 { font-size: clamp(52px, 14vw, 80px); }
       .hero-desc { font-size: 14px; }
       .hero-btns { flex-direction: column; gap: 10px; }
@@ -974,6 +980,10 @@
       </div>
     </div>
 
+    <!-- FL Studio image – desktop only -->
+    <div class="hero-right hero-img-desktop">
+      <img src="main2_nobg.png" alt="FL Studio" style="width:100%;display:block;">
+    </div>
   </div>
 
   <!-- WHAT YOU GET -->
@@ -1039,7 +1049,33 @@
       <h2 class="section-h2">WHAT PRODUCERS SAY</h2>
     </div>
 
-    <div style="position:relative;max-width:600px;margin:0 auto;">
+    <!-- Desktop: 3 cards per slide -->
+    <div class="desktop-only" style="position:relative;">
+      <button onclick="slideReviewsD(-1)" style="position:absolute;left:-18px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">‹</button>
+      <button onclick="slideReviewsD(1)"  style="position:absolute;right:-18px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">›</button>
+      <div style="overflow:hidden;">
+        <div id="revInnerD" style="display:flex;transition:transform .4s cubic-bezier(.25,.46,.45,.94);">
+          <div style="min-width:100%;box-sizing:border-box;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">Diamond tier worth every dollar. Got the Weeknd Blinding Lights FLP — every synth, every clip is there. Learned more in one session than 6 months of YouTube tutorials.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5bc4e8,#7dc438);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">M</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">MikeOnTheTrack</div><div style="font-size:11px;color:#555;">Beatmaker · Atlanta</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Diamond</div></div></div>
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">Bro the Kendrick FLP is insane. You can see exactly how the low end is mixed. Subscribed to Exclusive and never looked back — best investment I made as a producer.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#cc44ff,#ff4b2b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">J</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">JayProduces</div><div style="font-size:11px;color:#555;">FL Studio · London</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Exclusive</div></div></div>
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">1400+ projects for $15/month is literally insane value. I open 2-3 FLPs per week and study them. My beats have leveled up so much. The stems alone are worth the subscription.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#555,#999);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">K</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">KhalidBeats</div><div style="font-size:11px;color:#555;">Producer · Dubai</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Diamond</div></div></div>
+            </div>
+          </div>
+          <div style="min-width:100%;box-sizing:border-box;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">Opened the Travis Scott FLP and in one hour I understood how 808 sidechaining actually works. Better than any tutorial. Already using the patterns in my own sessions.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff8c00,#ff4b2b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">D</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">Damir_Beatz</div><div style="font-size:11px;color:#555;">Producer · Almaty</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Gold</div></div></div>
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">New projects drop every month and I look forward to it like a new episode. Been Exclusive for 6 months. Ravshan answers questions personally — that alone is worth the price.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff8c00,#ffcc00);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">S</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">Sarvar_Music</div><div style="font-size:11px;color:#555;">Exclusive · Moscow</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Exclusive</div></div></div>
+              <div style="background:linear-gradient(135deg,#111,#141414);border:1px solid #1f1f1f;border-radius:14px;padding:28px 28px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;"><div style="position:absolute;top:-10px;left:20px;font-size:100px;line-height:1;color:#ff8c00;opacity:0.06;font-family:Georgia,serif;pointer-events:none;">"</div><div style="color:#ff8c00;font-size:13px;margin-bottom:14px;">★★★★★</div><p style="color:#e0e0e0;font-size:14px;line-height:1.7;margin:0 0 22px;flex:1;">Gold tier for $5 is a steal. Grabbed the Drake Gods Plan FLP, broke down the entire melody. Now I build similar chord progressions in every session. Game changer.</p><div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#f5a623,#7dc438);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0;">A</div><div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">Amir_FL</div><div style="font-size:11px;color:#555;">Producer · Tashkent</div></div><div style="margin-left:auto;font-size:10px;color:#444;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Gold</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="revDotsD" style="display:flex;justify-content:center;gap:6px;margin-top:20px;"></div>
+    </div>
+
+    <!-- Mobile: 1 card per slide -->
+    <div class="mobile-only" style="position:relative;max-width:600px;margin:0 auto;">
       <button id="revPrev" onclick="slideReviews(-1)" style="position:absolute;left:-20px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">‹</button>
       <button id="revNext" onclick="slideReviews(1)"  style="position:absolute;right:-20px;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:#0e0e0e;border:1px solid #2a2a2a;color:#888;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='#ff8c00';this.style.color='#ff8c00'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">›</button>
 
@@ -1131,11 +1167,12 @@
     </div>
   </section>
   <script>
+    // Mobile slider (1 card)
     (function(){
-      var idx = 0;
-      var total = 6;
+      var idx = 0, total = 6;
       function updateDots() {
         var dots = document.getElementById('revDots');
+        if (!dots) return;
         dots.innerHTML = '';
         for (var i = 0; i < total; i++) {
           var d = document.createElement('div');
@@ -1145,20 +1182,40 @@
         }
       }
       function updateSlide() {
-        document.getElementById('reviewsInner').style.transform = 'translateX(-' + (idx * 100) + '%)';
+        var el = document.getElementById('reviewsInner');
+        if (el) el.style.transform = 'translateX(-' + (idx * 100) + '%)';
         updateDots();
       }
-      window.slideReviews = function(dir) {
-        idx = (idx + dir + total) % total;
-        updateSlide();
-      };
+      window.slideReviews = function(dir) { idx = (idx + dir + total) % total; updateSlide(); };
+      updateDots();
+    })();
+    // Desktop slider (3 cards)
+    (function(){
+      var idx = 0, total = 2;
+      function updateDots() {
+        var dots = document.getElementById('revDotsD');
+        if (!dots) return;
+        dots.innerHTML = '';
+        for (var i = 0; i < total; i++) {
+          var d = document.createElement('div');
+          d.style.cssText = 'width:' + (i===idx?'20px':'6px') + ';height:6px;border-radius:3px;background:' + (i===idx?'#ff8c00':'#2a2a2a') + ';transition:all .3s;cursor:pointer;';
+          (function(ii){ d.onclick = function(){ idx=ii; updateSlide(); }; })(i);
+          dots.appendChild(d);
+        }
+      }
+      function updateSlide() {
+        var el = document.getElementById('revInnerD');
+        if (el) el.style.transform = 'translateX(-' + (idx * 100) + '%)';
+        updateDots();
+      }
+      window.slideReviewsD = function(dir) { idx = (idx + dir + total) % total; updateSlide(); };
       updateDots();
     })();
   </script>
 
-  <!-- FL Studio image bottom -->
-  <section style="padding:0;overflow:hidden;">
-    <img src="main2_nobg.png" alt="FL Studio" style="width:100%;display:block;max-height:500px;object-fit:contain;object-position:center;">
+  <!-- FL Studio image bottom – mobile only -->
+  <section class="mobile-only" style="padding:0;overflow:hidden;">
+    <img src="main2_nobg.png" alt="FL Studio" style="width:100%;display:block;max-height:400px;object-fit:contain;object-position:center;">
   </section>
 
 </div>
